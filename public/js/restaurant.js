@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-    var titleInput = document.querySelector('[name="renter_form[name]"]');
-    var slugInput = document.querySelector('[name="renter_form[slug]"]');
+    var titleInput = document.querySelector('[name="restaurant_form[name]"]');
+    var slugInput = document.querySelector('[name="restaurant_form[slug]"]');
     // var reservationSlugElement = document.getElementById('reservation-slug');
     var slugErrorElement = document.getElementById('slug-error');
     var submitButton = document.getElementById('submit-button'); // Assuming the ID of your submit button
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Send AJAX request to check the uniqueness of the slug
         currentChangeTitleRequest = $.ajax({
-            url: '/renter/ajax/check-unique-slugs',
+            url: '/restaurant/ajax/check-unique-slugs',
             method: 'POST',
             dataType: 'json',
             data: { name: title },
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (editedSlug !== '') {
             // Send AJAX request to check the uniqueness of the edited slug
             currentChangeSlugRequest = $.ajax({
-                url: '/renter/ajax/check-unique-slugs',
+                url: '/restaurant/ajax/check-unique-slugs',
                 method: 'POST',
                 dataType: 'json',
                 data: { name: editedSlug }, // Send the edited slug as the title
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Event listener for form submission
-    document.getElementById('renter-form').addEventListener('submit', function(event) {
+    document.getElementById('restaurant-form').addEventListener('submit', function(event) {
         if (!slugInput.value.trim() || slugErrorElement.textContent !== '') {
             // Prevent form submission if slug is empty or not unique
             event.preventDefault();

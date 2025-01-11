@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            {{ form_start(form, {'attr': {'id': 'renter-form'}}) }}
+            {{ form_start(form, {'attr': {'id': 'restaurant-form'}}) }}
                 <div class="basic-form">
                     <div class="card">
                         <div class="card-header">
@@ -40,19 +40,19 @@
                             <div class="mb-3 row">
                                 <label class="col-sm-4 col-md-3 col-form-label">Naziv</label>
                                 <div class="col-sm-6 col-md-6 col-lg-4">
-                                    {{ form_row(form.name, {'attr': {'class': 'form-control renter-name', 'placeholder': 'Ime'}, 'label': false }) }}
+                                    {{ form_row(form.name, {'attr': {'class': 'form-control restaurant-name', 'placeholder': 'Ime'}, 'label': false }) }}
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label class="col-sm-4 col-md-3 col-form-label">Adresa</label>
                                 <div class="col-sm-6 col-md-6 col-lg-4">
-                                    {{ form_row(form.adresa, {'attr': {'class': 'form-control renter-adresa', 'placeholder': 'Adresa'}, 'label': false }) }}
+                                    {{ form_row(form.adresa, {'attr': {'class': 'form-control restaurant-adresa', 'placeholder': 'Adresa'}, 'label': false }) }}
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label class="col-sm-4 col-md-3 col-form-label">Email</label>
                                 <div class="col-sm-6 col-md-6 col-lg-4">
-                                    {{ form_row(form.email, {'attr': {'class': 'form-control renter-adresa', 'placeholder': 'Email'}, 'label': false }) }}
+                                    {{ form_row(form.email, {'attr': {'class': 'form-control restaurant-adresa', 'placeholder': 'Email'}, 'label': false }) }}
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -101,7 +101,7 @@
 {% endblock %}
 
 {% block customJS %}
-    <script src="{{ asset('js/renter.js') }}"></script>
+    <script src="{{ asset('js/restaurant.js') }}"></script>
 
     {# date picker #}
     <script src="{{ asset('vendor/pickadate/picker.js') }}"></script>
