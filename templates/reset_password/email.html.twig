@@ -1,0 +1,11 @@
+<h1>Pozdrav!</h1>
+
+<p>Za ponovno postavljanje lozinke posjetite ovaj link:</p>
+
+<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">
+    {{ url('app_reset_password', {token: resetToken.token}) }}
+</a>
+
+<p>Link istječe za {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+<p>Pilane APP by STACK.ba</p>

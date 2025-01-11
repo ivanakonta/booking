@@ -1,0 +1,54 @@
+<div class="col-xl-6 col-xxl-6 col-lg-6">
+    <div class="card border-0 pb-0">
+        <div class="card-header border-0 pb-0">
+            <h4 class="card-title">Lista radnih dana</h4>
+        </div>
+        <div class="card-body p-0">
+            <div id="DZ_W_Todo4" class="widget-media dz-scroll my-4 px-4 height370">
+                <ul class="timeline">
+                    {% for addWorkingDay in addWorkingDays|sort((a, b) => a.date <=> b.date) %}
+                        {% set currentDate = "now"|date('Y-m-d') %}
+                        {% set isDateInPast = addWorkingDay.date|date('Y-m-d') < currentDate %}
+
+                        {% if not isDateInPast %}
+                            <li>
+                                <div class="timeline-panel">
+                                    <div class="form-check custom-checkbox mb-3 check-xs">
+                                        <input type="checkbox" class="form-check-input" checked id="customCheckBox1" required>
+                                        <label class="form-check-label" for="customCheckBox1"></label>
+                                    </div>
+                                    <div class="media-body">
+                                        <h5 class="mb-0">{{ addWorkingDay.description }}</h5>
+                                        <small class="text-muted">{{ addWorkingDay.date|date('d.m.Y') }}</small>
+                                    </div>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                                            <svg width="18px" height="18px" viewbox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24"/>
+                                                    <circle fill="#000000" cx="5" cy="12" r="2"/>
+                                                    <circle fill="#000000" cx="12" cy="12" r="2"/>
+                                                    <circle fill="#000000" cx="19" cy="12" r="2"/>
+                                                </g>
+                                            </svg>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item text-danger" href="{{ path('remove_working_day', {'id': addWorkingDay.id}) }}">
+                                                <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#F24242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M15 9L9 15" stroke="#F24242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M9 9L15 15" stroke="#F24242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                Izbriši
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

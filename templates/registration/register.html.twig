@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+{% set pageTitle = 'Registracija korisnika' %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="form-head d-flex mb-3 mb-lg-5 align-items-start">
+        <div class="me-auto d-none d-lg-block">
+            <a class="text-primary d-flex align-items-center mb-3 font-w500" href="{{ path('list_korisnici', { 'id': renter.id })}}">
+                <svg class="me-3" width="24" height="12" viewBox="0 0 24 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.274969 5.14888C0.27525 5.1486 0.275484 5.14827 0.275812 5.14799L5.17444 0.272997C5.54142 -0.0922061 6.135 -0.090847 6.5003 0.276184C6.86555 0.643168 6.86414 1.23675 6.49716 1.60199L3.20822 4.87499H23.0625C23.5803 4.87499 24 5.29471 24 5.81249C24 6.33027 23.5803 6.74999 23.0625 6.74999H3.20827L6.49711 10.023C6.86409 10.3882 6.8655 10.9818 6.50025 11.3488C6.13495 11.7159 5.54133 11.7171 5.17439 11.352L0.275764 6.47699C0.275483 6.47671 0.27525 6.47638 0.274921 6.4761C-0.0922505 6.10963 -0.0910778 5.51413 0.274969 5.14888Z" fill="#2bc155"></path>
+                </svg>
+                Nazad
+            </a>
+            <a class="mb-0 text-secondary fs-18 font-w500 disabled" href="#">Zaposlenici  /</a>
+            <a class="mb-0 font-w500 fs-18 disabled" href="#"> Registracija Zaposlenika</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="form-head d-flex mb-3 mb-md-5 align-items-start flex-wrap">
+                <div class="me-auto">
+                    <h3 class="font-w600 mb-0 fs-22 mb-2">
+                        <span class="text-black">Registracija zaposlenika</span>
+                    </h3>
+                </div>
+            </div>
+
+            {{ form_start(registrationForm, {'attr': {'id': 'registration-form'}}) }}
+                <div class="basic-form">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Registriraj novog zaposlenika</h4>
+                        </div>
+                        <div class="card-body">
+                            <label class="mb-1"><strong>Ime</strong></label>
+                            {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Ime'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Prezime</strong></label>
+                            {{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Prezime'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Korisničko ime</strong></label>
+                            {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control', 'placeholder': 'Korisničko ime'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Email adresa</strong></label>
+                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Lozinka</strong></label>
+                            {{ form_widget(registrationForm.password, {'attr': {'class': 'form-control', 'placeholder': 'Lozinka'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Vrsta zaposlenika</strong></label>
+                            {{ form_widget(registrationForm.role, {'attr': {'class': 'form-control'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Korisnik aktivan</strong></label>
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="form-check">
+                                    {{ form_widget(registrationForm.isActive, {'attr': {'class': 'form-check-input'}, 'label': false  }) }}
+                                    <label class="form-check-label">Aktivan</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-sm-flex justify-content-between align-items-center">
+                            <div class="card-footer-link mb-4 mb-sm-0"></div>
+                            <button id="submit-button" type="submit" class="btn btn-primary">Registriraj</button>
+                        </div>
+                        <div class="hidden">
+                            {{ form_rest(registrationForm) }}
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(registrationForm) }}
+
+            <div class="new-account mt-3">
+                <p>Već imaš račun? <a class="text-primary" href="/login">Logiraj se</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

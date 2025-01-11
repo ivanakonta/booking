@@ -1,0 +1,129 @@
+{% extends "./base.html.twig" %}
+
+{% block customStylesheet %}
+    <!-- Potrebno za listu rezervacija -->
+    <link rel="stylesheet" href="{{ asset('vendor/datatables/css/jquery.dataTables.min.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="form-head d-flex mb-4 align-items-start">
+        <form action="{{ path('managers') }}" method="get">
+            <div class="input-group search-area d-inline-flex">
+                <input
+                    type="text"
+                    name="search_query"
+                    class="form-control"
+                    placeholder="Guest Name"
+                    value="{{ app.request.query.get('search_query') }}"
+                >
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary rounded-pill no-border" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="table-responsive">
+                <div id="example5_wrapper" class="dataTables_wrapper no-footer">
+                    <table id="example5" class="display mb-4 dataTablesCard dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th><strong class="font-w600">Email</strong></th>
+                                <th><strong class="font-w600">Korisničko ime</strong></th>
+                                <th><strong class="font-w600">Ime i prezime</strong></th>
+                                <th><strong class="font-w600">Vrsta korisnika</strong></th>
+                                <th><strong class="font-w600">Edit</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        {% if user.roles is defined and user.roles|length > 0 %}
+                                            {% if 'ROLE_ADMIN' in user.roles %}
+                                                Role Admin
+                                            {% elseif 'ROLE_MANAGER' in user.roles %}
+                                                Rola Managera
+                                            {% elseif 'ROLE_USER' in user.roles %}
+                                                Rola Korisnika
+                                            {% endif %}
+                                        {% else %}
+                                            No Role
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.getRenter is not null %}
+                                            {{ user.getRenter.name }}
+                                        {% else %}
+                                            No Restaurant
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="dropdown ms-auto c-pointer">
+                                            <div class="btn-link" data-bs-toggle="dropdown">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 12C13.1046 12 14 11.1046 14 10C14 8.89543 13.1046 8 12 8C10.8954 8 10 8.89543 10 10C10 11.1046 10.8954 12 12 12Z" fill="#3E4954"/>
+                                                    <path d="M12 4C13.1046 4 14 3.10457 14 2C14 0.89543 13.1046 0 12 0C10.8954 0 10 0.89543 10 2C10 3.10457 10.8954 4 12 4Z" fill="#3E4954"/>
+                                                    <path d="M12 20C13.1046 20 14 19.1046 14 18C14 16.8954 13.1046 16 12 16C10.8954 16 10 16.8954 10 18C10 19.1046 10.8954 20 12 20Z" fill="#3E4954"/>
+                                                </svg>
+                                            </div>
+                                            <div class="dropdown-menu dropdown-menu-end">
+                                                {% if user.getRestaurant is not null %}
+                                                    {# <a class="dropdown-item text-black" href="{{ path('show_restaurant', {'slug': user.getRestaurant.slug}) }}"> #}
+                                                        <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M12 16V12" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M12 8H12.01" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                        View restaurant
+                                                    </a>
+                                                {% endif %}
+                                                {% if user.getRestaurant is null %}
+                                                    {# <a class="dropdown-item text-black" href="{{ path('new_restaurant', {'userId': user.id}) }}"> #}
+                                                        <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M12 16V12" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M12 8H12.01" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                        Add Restaurant
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block customJS %}
+    <!-- Potrebno za prikaz rezervacija - Datatable -->
+    <script src="{{ asset('/vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
+
+    <script>
+        (function ($) {
+            var table = $('#example5').DataTable({
+                searching: false,
+                paging: true,
+                select: false,
+                // info: false,
+                lengthChange: false
+            });
+
+            $('#example tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+            });
+        })(jQuery);
+    </script>
+{% endblock %}

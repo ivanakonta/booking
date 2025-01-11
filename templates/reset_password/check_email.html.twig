@@ -1,0 +1,45 @@
+{% extends 'reset_password/base-reset.html.twig' %}
+
+{% set pageTitle = 'Password Reset Email Sent' %}
+
+{% block content %}
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <div class="text-center mb-3">
+                                        <img src="{{ asset('images/pilane1.png')}}" alt="" width="350" height="85">
+                                    </div>
+                                    <h4 class="text-center mb-4">Poslan email za ponovno postavljanje</h4>
+                                    <div class="form-group">
+                                        <div>
+                                            <small>
+                                                Ako postoji račun sa ovim emailom, onda je email sa linkom za ponovno postavljanje lozinke poslan.
+                                                Link istječe za {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                                            </small>
+                                            <br>
+                                            <br>
+                                            <small>
+                                                Ako ne vidite primljeni email, pogledajte u spam datoteku.
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="{{ path('app_forgot_password_request') }}" class="btn btn-primary btn-block">
+                                            <!-- Your button content goes here -->
+                                            Pokušaj ponovo
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

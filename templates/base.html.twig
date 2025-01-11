@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Title -->
+        <title>Renter App - STACK d.o.o.</title>
+
+        <!-- Meta -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="author" content="STACK d.o.o.">
+        <meta name="robots" content="">
+
+        <meta name="keywords" content="admin panel, renter management, renter software, renter analytics, restaurant operations, food service management, restaurant inventory, menu management, staff scheduling, table management, POS integration, kitchen management, restaurant reporting, restaurant POS, cafe management, restaurant reservations, online booking system, restaurant metrics, restaurant performance, restaurant trends">
+        <meta name="description" content="Boost your Renter business with Koki's Bootstrap 5 HTML Template. Our professionally designed admin templates cater specifically to the needs of Food, admin and cafe business, offering visually stunning and functional designs. Choose from a variety of Koki website templates that are perfect for showcasing your menu, promoting your services, and attracting Factory  customers. Partner with DexignZone to create an impressive online presence for your Restaurant. Start driving more traffic and growing your business today">
+
+        <meta property="og:title" content="Renter App - Renter Admin Office">
+        <meta property="og:description" content="Boost your Restaurant business with Koki's Bootstrap 5 HTML Template. Our professionally designed admin templates cater specifically to the needs of Food, admin and cafe business, offering visually stunning and functional designs. Choose from a variety of Koki website templates that are perfect for showcasing your menu, promoting your services, and attracting Factory  customers. Partner with DexignZone to create an impressive online presence for your Restaurant. Start driving more traffic and growing your business today">
+        <meta property="og:image" content="{{ asset('images/renting-logo.png')}}">
+        <meta name="format-detection" content="telephone=no">
+
+        <!-- Mobile Specific -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Favicon icon -->
+        <link rel="icon" type="image/png" href="{{ asset('images/renting-logo.png') }}">
+
+        {# Before default stylesheet #}
+        {% block beforeStylesheet %}{% endblock %}
+
+        {# Default stylesheet #}
+        {{ include('base/default-style-sheet.html.twig') }}
+
+        {# Custom stylesheet #}
+        {% block customStylesheet %}{% endblock %}
+    </head>
+    <body>
+        <div id="overlay">
+            <div class="spinner-wrapper">
+                <div class="sk-three-bounce">
+                    <div class="sk-child sk-bounce1"></div>
+                    <div class="sk-child sk-bounce2"></div>
+                    <div class="sk-child sk-bounce3"></div>
+                </div>
+            </div>
+        </div>
+        <div id="preloader">
+            <div class="sk-three-bounce">
+                <div class="sk-child sk-bounce1"></div>
+                <div class="sk-child sk-bounce2"></div>
+                <div class="sk-child sk-bounce3"></div>
+            </div>
+        </div>
+
+        <div id="toastMessages" class="hidden">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}" data-title="{{ message.title }}">{{ message.message }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <div id="main-wrapper">
+            {{ include('base/header.html.twig') }}
+            {{ include('base/sidebar.html.twig') }}
+
+            <div class="content-body">
+                {% block body %}{% endblock %}
+            </div>
+
+            {{ include('base/footer.html.twig') }}
+        </div>
+
+        {{ include('base/default-js-script.html.twig') }}
+
+        {# Custom JS scripts #}
+        {% block customJS %}{% endblock %}
+    </body>
+</html>

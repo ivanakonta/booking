@@ -1,0 +1,33 @@
+<div class="col-xl-12 col-xxl-12 col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Onemogući rezervacije za današnji datum:</h4>
+        </div>
+        <div class="card-body">
+            <label class="col-sm-12 col-md-12 col-form-label">
+                Onemogućite rezervaciju za današnji datum kreiranjem neradnog dana. To gostima onemogućuje nove rezervacije za današnji datum. Rezervacije izvršene prije onemogućavanja rezervacije za današnji datum ostat će aktivne.
+            </label>
+            <div class="mb-3 row">
+                <div class="col-sm-8 col-md-9">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="bookingToggle" {{ isTodayNonWorkingDay ? 'checked' : '' }} onchange="toggleBooking()">
+                        <label class="form-check-label" for="bookingToggle">
+                            {{ isTodayNonWorkingDay ? 'ON (Rezervacije su uključene)' : 'OFF (Rezervacije su isključene)' }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleBooking() {
+        const checkbox = document.getElementById('bookingToggle');
+        const url = checkbox.checked
+            ? '{{ path('disable_booking_today', {'id': renter.id}) }}'
+            : '{{ path('disable_booking_today', {'id': renter.id}) }}';
+
+        window.location.href = url;
+    }
+</script>

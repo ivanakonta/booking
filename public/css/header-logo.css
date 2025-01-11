@@ -1,0 +1,21 @@
+/* Default styles for all images */
+.logo-abbr,
+.logo-compact,
+.brand-title {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+/* Class to show the .logo-abbr image */
+.show-on-small {
+    display: none; /* Hide by default */
+}
+
+/* Show the .logo-abbr image on smaller screens */
+@media (max-width: 767px) {
+    .show-on-small {
+        display: block; /* Show on smaller screens */
+    }
+}

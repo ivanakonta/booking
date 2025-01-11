@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-6 col-md-6 col-xxl-6">
+                <div class="card">
+                    <div class="card-body">
+                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
+                            <h4 class="text-black mb-3">Administracijski linkovi</h4>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body text-center p-3">
+                                            <a href="{{ path('list_korisnici', {id: renter.id}) }}" class="btn btn-primary btn-block p-2">
+                                                Zaposlenici
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body text-center p-3">
+                                            <a href="{{ path('list_vozila', {id: renter.id}) }}" class="btn btn-primary btn-block p-2">
+                                                Vozila
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+	    	<div class="col-xl-6 col-md-6 col-xxl-6">
+	    		<div class="card">
+	    			<div class="card-body border-bottom">
+	    				<div class="media align-items-center">
+	    					<img class="me-3 rounded-circle"
+                                src="{{ renter.logo is defined and renter.logo is not empty ? asset(image_dir ~ renter.logo) : asset('images/card/pic4.jpg') }}"
+                                alt="{{ renter.name }}"
+                                width="90"
+                            >
+                            <a href="{{ path('edit_renter', {'id': renter.id}) }}">
+	    					    <div class="media-body">
+	    						    <h4 class="text-black mb-3">{{ renter.name }}</h4>
+                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
+	    						        <span class="btn btn-primary light brn-sm fs-14 p-2 rounded">Uredi</span>
+                                    {% endif %}
+	    					    </div>
+                            </a>
+	    				</div>
+	    			</div>
+                    <div class="card-body border-bottom">
+                        <div class="media align-items-center">
+                            <h4 class="mb-0 text-black-400">Mobitel:&nbsp;</h4>
+                            <h4 class="mb-0 text-black">{{ renter.mobitel }}</h4>
+                        </div>
+                    </div>
+	    			<div class="card-body border-bottom">
+	    				<div class="media align-items-center">
+	    					<h4 class="mb-0 text-black-400">Adresa:&nbsp; </h4>
+	    					<h4 class="mb-0 text-black"> {{ renter.adresa }}</h4>
+	    				</div>
+	    			</div>
+	    			<div class="card-body border-bottom">
+	    				<div class="media align-items-center">
+	    					<h4 class="mb-0 text-black-400">Email:&nbsp; </h4>
+	    					<h4 class="mb-0 text-black"> {{ renter.email }}</h4>
+	    				</div>
+	    			</div>
+	    			<div class="card-body border-bottom">
+	    				<div class="media align-items-center">
+	    					<h4 class="mb-0 text-black-400">Kreirana:&nbsp; </h4>
+	    					<h4 class="mb-0 text-black"> {{ renter.createdAt|date('d.m.Y H:i') }}</h4>
+	    				</div>
+	    			</div>
+	    			<div class="card-body border-bottom">
+	    				<div class="media align-items-center">
+	    					<h4 class="mb-0 text-black-400">Zadnja izmjena:&nbsp; </h4>
+	    					<h4 class="mb-0 text-black"> {{ renter.modifiedAt|date('d.m.Y H:i') }}</h4>
+	    				</div>
+	    			</div>
+	    		</div>
+	    	</div>
+	    </div>
+    </div>
+{% endblock %}

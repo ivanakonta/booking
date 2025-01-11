@@ -1,0 +1,113 @@
+<div class="deznav" style="background-color:#d8d8d8">
+    <div class="deznav-scroll">
+        <ul class="metismenu" id="menu">
+            {% set isAdmin = is_granted('ROLE_ADMIN') %}
+            {% set isManager = is_granted('ROLE_MANAGER') %}
+            {% set isUser = is_granted('ROLE_USER') %}
+            {% if isAdmin %}
+
+            {# General Links #}
+            <li>
+                <a href="{{ path('renter') }}">
+                    <i class="flaticon-dashboard-1"></i>
+                    <span class="nav-text">{{ 'Svi Iznajmljivači'|trans }}</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('new_renter') }}">
+                    <i class="flaticon-add"></i>
+                    <span class="nav-text">{{ 'Dodaj Iznajmljivača'|trans }}</span>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if renter is defined and renter.id is not null and (isManager or isAdmin) %}
+                 {# Unos Podataka Section #}
+                <li>
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="flaticon-ticket-window"></i>
+                        <span class="nav-text">{{ 'Iznajmljivač'|trans }}</span>
+                    </a>
+                    <ul aria-expanded="false" class="mm-collapse">
+                        <li>
+                            <a href="{{ path('show_renter', { 'id': renter.id })}}">
+                                {{ 'Informacije'|trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="flaticon-business-report"></i>
+                        <span class="nav-text">{{ 'Unos podataka'|trans }}</span>
+                    </a>
+                    <ul aria-expanded="false" class="mm-collapse">
+                        {# <li>
+                            <a href="{{ path('list_dldo', { 'id': pilana.id }) }}">
+                                {{ 'Dovoz oblovine'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('list_prorez_oblovine', { 'id': pilana.id }) }}">
+                                {{ 'Prorez oblovine'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('list_gotovi_proizvod', { 'id': pilana.id }) }}">
+                                {{ 'Gotovi proizvodi'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('list_rezana_grada', { 'id': pilana.id }) }}">
+                                {{ 'Rezana grada'|trans }}
+                            </a>
+                        </li> #}
+                    </ul>
+                </li>
+                <li>
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="flaticon-settings"></i>
+                        <span class="nav-text">{{ 'Postavke'|trans }}</span>
+                    </a>
+                    <ul aria-expanded="false" class="mm-collapse">
+                        {# Korisnici Section #}
+                        <li>
+                            <a href="{{ path('edit_renter', { 'id': renter.id })}}">
+                                {{ 'Uredi Iznajmljivača'|trans }}
+                            </a>
+                        </li>
+                        {# Korisnici Section #}
+                        <li>
+                            <a href="{{ path('list_korisnici', {id: renter.id}) }}">
+                                {{ 'Zaposlenici'|trans }}
+                            </a>
+                        </li>
+                        {# Vrsta Drveta Section #}
+                        <li>
+                            <a href="{{ path('list_vozila', {'id': renter.id}) }}">
+                                {{ 'Vozila'|trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            {% elseif renter is defined and renter.id is not null and isUser %}
+                {# Unos Podataka Section #}
+                <li>
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="flaticon-ticket-window"></i>
+                        <span class="nav-text">{{ 'Iznajmljivač'|trans }}</span>
+                    </a>
+                    <ul aria-expanded="false" class="mm-collapse">
+                        <li>
+                            <a href="{{ path('show_renter', { 'id': renter.id })}}">
+                                {{ 'Informacije'|trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% endif %}
+
+        </ul>
+    </div>
+</div>

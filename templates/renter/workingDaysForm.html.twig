@@ -1,0 +1,35 @@
+<div class="col-xl-6 col-xxl-6 col-lg-6">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Dodaj radni dan</h4>
+        </div>
+        <div class="card-body">
+            <div class="basic-form">
+                {{ form_start(addWorkingDaysForm) }}
+                    <div class="mb-4 row">
+                        <label class="col-sm-4 col-form-label">Datum</label>
+                        <div class="col-sm-8">
+                        {{ form_row(addWorkingDaysForm.date, {'attr': {
+                            'class': 'form-control datepicker-default picker__input',
+                            'id': 'datepicker',
+                        }, 'label': false }) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label class="col-sm-4 col-form-label">Opis</label>
+                        <div class="col-sm-8">
+                            {{ form_row(addWorkingDaysForm.description, {'attr': {'class': 'form-control'}, 'label': false  }) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Dodaj</button>
+                        </div>
+                    </div>
+                {{ form_end(addWorkingDaysForm) }}
+            </div>
+        </div>
+    </div>
+</div>

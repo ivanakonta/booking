@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block beforeStylesheet %}
+    {# Clockpicker #}
+    <link rel="stylesheet" href="{{ asset('vendor/clockpicker/css/bootstrap-clockpicker.min.css') }}">
+
+    {# asColorpicker #}
+    <link rel="stylesheet" href="{{ asset('vendor/jquery-asColorPicker/css/asColorPicker.min.css') }}">
+
+    {# Pick date #}
+    <link rel="stylesheet" href="{{ asset('vendor/pickadate/themes/default.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/pickadate/themes/default.date.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="form-head d-flex mb-3 mb-md-5 align-items-start flex-wrap">
+                <div class="me-auto">
+                    <h3 class="font-w600 mb-0 fs-22 mb-2">
+                        <span class="text-black">Renter Slug: {{renter.slug}} </span><br>
+                        <span class="text-primary">Renter ID: {{renter.id}} </span>
+                    </h3>
+                    {# <span class="mb-0 font-w500">
+                        <span class="text-black">User:</span>
+                        <span class="text-primary">{{ userEmail }}</span>
+                    </span> #}
+                </div>
+            </div>
+
+            {{ form_start(form, {'attr': {'id': 'renter-form'}}) }}
+                <div class="basic-form">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Postavi informacije Iznajmljivača</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Naziv</label>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    {{ form_row(form.name, {'attr': {'class': 'form-control renter-name', 'placeholder': 'Ime'}, 'label': false }) }}
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Adresa</label>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    {{ form_row(form.adresa, {'attr': {'class': 'form-control renter-adresa', 'placeholder': 'Adresa'}, 'label': false }) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Slug</label>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    {{ form_row(form.slug, {'attr': {'class': 'form-control', 'placeholder': 'Slug'}, 'label': false }) }}
+                                    <span id="slug-error" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Iznajmljivač aktivan ili ne</label>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    <div class="form-check">
+                                        {{ form_row(form.isActive, {'attr': {'class': 'form-check-input'}, 'label': false  }) }}
+                                        <label class="form-check-label">Iznajmljivač aktivan</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Logo [150 x 150 px]</label>
+                                <div class="col-sm-8 col-md-6 col-xl-4">
+                                    <div class="img-thumbnail restaurant-wrap-image" >
+                                        <img src="{{ asset(image_dir ~ renter.logo) }}" class="restaurant-image" alt="Renter Logo">
+                                    </div>
+                                    {{ form_row(form.logo, {'attr': {'class': 'form-control'}, 'label': 'Upload New Logo'}) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <hr>
+                                <br>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="card-title card-intro-title">Obavijesti</h4>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Kontakt broj</label>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    {{ form_row(form.mobitel, {'attr': {'class': 'form-control', 'placeholder': '+38591234567'}, 'label': false  }) }}
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Email</label>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    {{ form_row(form.email, {'attr': {'class': 'form-control renter-adresa', 'placeholder': 'Email'}, 'label': false }) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <hr>
+                                <br>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="card-title card-intro-title">Radno vrijeme:</h4>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Radni dani</label>
+                                <div class="col-sm-8">
+                                    {% for day in form.days %}
+                                        <div class="form-check form-check-inline">
+                                            {{ form_widget(day, {'attr': {'class': 'form-check-input'}, 'label': false}) }}
+                                            <label class="form-check-label">{{ day.vars.label }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <hr>
+                                <br>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="card-title card-intro-title">API:</h4>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Monri Secret Key</label>
+                                <div class="col-sm-8 col-md-9">
+                                    {{ form_row(form.monriSecretKey, {'attr': {'class': 'form-control', 'placeholder': 'Enter Monri Secret Key'}, 'label': false }) }}
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Monri Public Key</label>
+                                <div class="col-sm-8 col-md-9">
+                                    {{ form_row(form.monriPublicKey, {'attr': {'class': 'form-control', 'placeholder': 'Enter Monri Public Key'}, 'label': false }) }}
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Google Calendar API</label>
+                                <div class="col-sm-8 col-md-9">
+                                    {{ form_row(form.googleCalendar, {'attr': {'class': 'form-control', 'placeholder': 'Enter Google Calendar Key'}, 'label': false }) }}
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer d-sm-flex justify-content-between align-items-center">
+                            <div class="card-footer-link mb-4 mb-sm-0"></div>
+                            <button id="submit-button" type="submit" class="btn btn-primary">Uredi</button>
+                        </div>
+                        <div class="hidden">
+                            {{ form_rest(form) }}
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+
+        {{ include('renter/disableBookingToday.html.twig', {
+            renter: renter,
+            isTodayNonWorkingDay: isTodayNonWorkingDay,
+        }, with_context = false) }}
+        {{ include('renter/nonWorkingDaysList.html.twig', {
+            nonWorkingDays: form.vars.value.nonWorkingDays,
+        }, with_context = false) }}
+        {{ include('renter/nonWorkingDaysForm.html.twig', {
+            nonWorkingDaysForm: nonWorkingDaysForm,
+        }, with_context = false) }}
+        {{ include('renter/workingDaysList.html.twig', {
+            addWorkingDays: form.vars.value.workingDays,
+        }, with_context = false) }}
+        {{ include('renter/workingDaysForm.html.twig', {
+            addWorkingDaysForm: addWorkingDaysForm,
+        }, with_context = false) }}
+
+    </div>
+</div>
+{% endblock %}
+
+{% block customJS %}
+    <script src="{{ asset('js/renter.js') }}"></script>
+
+    {# date picker #}
+    <script src="{{ asset('vendor/pickadate/picker.js') }}"></script>
+    <script src="{{ asset('vendor/pickadate/picker.time.js') }}"></script>
+    <script src="{{ asset('vendor/pickadate/picker.date.js') }}"></script>
+    <script src="{{ asset('js/plugins-init/pickadate-init.js') }}"></script>
+
+    {# clockpicker #}
+    <script src="{{ asset('vendor/clockpicker/js/bootstrap-clockpicker.min.js') }}"></script>
+    <script src="{{ asset('js/plugins-init/clock-picker-init.js') }}"></script>
+
+    {# asColorPicker #}
+    <script src="{{ asset('vendor/jquery-asColor/jquery-asColor.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-asGradient/jquery-asGradient.min.js') }}"></script>
+    <script src="{{ asset('vendor/jquery-asColorPicker/js/jquery-asColorPicker.min.js') }}"></script>
+    <script src="{{ asset('js/plugins-init/jquery-asColorPicker.init.js') }}"></script>
+{% endblock %}

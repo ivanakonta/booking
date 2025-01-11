@@ -1,0 +1,11 @@
+twig:
+    file_name_pattern: '*.twig'
+    globals:
+        # image_dir: '%env(WORK_IMAGE_DIR)%'
+        image_dir: '%env(IMAGE_DIR)%'
+        # PRODUCTION: ODKOMENTIRATI OVU LINIJU A ZAKOMENTIRATI PRVU
+        domain: '%env(DOMAIN)%'
+
+when@test:
+    twig:
+        strict_variables: true

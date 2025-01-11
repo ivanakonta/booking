@@ -1,0 +1,56 @@
+{% extends "./base.html.twig" %}
+
+{% block body %}
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12 col-xxl-12">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header border-0 pb-0 flex-wrap d-lg-flex d-block">
+                                <div class="mb-3 me-3">
+                                    <h4 class="card-title mb-2">Iznajmljivači</h4>
+                                </div>
+                            </div>
+                            <div class="card-body tab-content p-0">
+                                <div class="tab-pane fade active show" id="all-categories">
+                                    {% for renter in renters %}
+                                        <a href="{{ path('show_renter', {'id': renter.id}) }}" class="text-decoration-none">
+                                            <div class="sp15 row border-bottom favorites-items p-3 align-items-center p-sm-4">
+                                                <div class="col-xl-5 col-lg-5 col-sm-6 col-12 mb-3 mb-lg-0">
+                                                    <div class="media align-items-center">
+                                                        <img class="rounded me-3"
+                                                            src="{{ renter.logo is defined and renter.logo is not empty ? asset(image_dir ~ renter.logo) : asset('images/card/pic4.jpg') }}"
+                                                            alt=""
+                                                            width="105"
+                                                            style="background-color: #f3f3f3;"
+                                                        >
+                                                        <div class="media-body">
+                                                            <h5 class="mb-2 text-black">{{ renter.name }}</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-2 col-sm-6 col-4 text-end">
+                                                    <div class="d-inline-block relative">
+                                                        <button type="button"
+                                                            class="btn btn-primary"
+                                                            onclick="location.href='{{ path('edit_renter', {'id': renter.id}) }}'"
+                                                        >
+                                                            Edit
+                                                            <span class="btn-icon-end"><i class="flaticon-configuration"></i></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
