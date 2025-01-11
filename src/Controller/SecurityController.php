@@ -23,14 +23,14 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
-        $renter = null;
+        $restaurant = null;
 
         if (!$isAdmin && $user instanceof Korisnik) {
             // For non-admin users, check if the user has a restaurant
-            $renter = $user->getRenter();
+            $restaurant = $user->getRestaurant();
         }
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'isAdmin' => $isAdmin, 'renter' => $renter]);
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'isAdmin' => $isAdmin, 'restaurant' => $restaurant]);
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

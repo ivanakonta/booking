@@ -36,19 +36,19 @@ class HomeController extends AbstractController
             // Check if the user has admin access
             $accessCheckerService->checkAdminAccess();
             // Redirect admin to the Pilane page
-            return $this->redirectToRoute('renter'); // Adjust this route name as needed
+            return $this->redirectToRoute('restaurant'); // Adjust this route name as needed
         } catch (AccessDeniedException $e) {
             // If admin access is denied, check if the user is a manager or user
             if ($authorizationChecker->isGranted('ROLE_MANAGER') || $authorizationChecker->isGranted('ROLE_USER')) {
-                // Check if the user has a Renter
-                $renter = $currentUser->getRenter();
-                if ($renter) {
-                    $renterId = $renter->getId();
-                    // Redirect user to their Renter page
-                    return $this->redirectToRoute('show_renter', ['id' => $renterId]);
+                // Check if the user has a restaurant
+                $restaurant = $currentUser->getRestaurant();
+                if ($restaurant) {
+                    $restaurantId = $restaurant->getId();
+                    // Redirect user to their restaurant page
+                    return $this->redirectToRoute('show_restaurant', ['id' => $restaurantId]);
                 } else {
-                    // Handle case where Renter is not set or found
-                    $this->addFlash('error', 'No Renter found for the user.');
+                    // Handle case where restaurant is not set or found
+                    $this->addFlash('error', 'No restaurant found for the user.');
                     return $this->redirectToRoute('app_login');
                 }
             } else {

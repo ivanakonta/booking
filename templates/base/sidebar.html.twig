@@ -8,29 +8,29 @@
 
             {# General Links #}
             <li>
-                <a href="{{ path('renter') }}">
+                <a href="{{ path('restaurant') }}">
                     <i class="flaticon-dashboard-1"></i>
-                    <span class="nav-text">{{ 'Svi Iznajmljivači'|trans }}</span>
+                    <span class="nav-text">{{ 'Svi Restorani'|trans }}</span>
                 </a>
             </li>
             <li>
-                <a href="{{ path('new_renter') }}">
+                <a href="{{ path('new_restaurant') }}">
                     <i class="flaticon-add"></i>
-                    <span class="nav-text">{{ 'Dodaj Iznajmljivača'|trans }}</span>
+                    <span class="nav-text">{{ 'Dodaj Restoran'|trans }}</span>
                 </a>
             </li>
             {% endif %}
 
-            {% if renter is defined and renter.id is not null and (isManager or isAdmin) %}
+            {% if restaurant is defined and restaurant.id is not null and (isManager or isAdmin) %}
                  {# Unos Podataka Section #}
                 <li>
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-ticket-window"></i>
-                        <span class="nav-text">{{ 'Iznajmljivač'|trans }}</span>
+                        <span class="nav-text">{{ 'Restoran'|trans }}</span>
                     </a>
                     <ul aria-expanded="false" class="mm-collapse">
                         <li>
-                            <a href="{{ path('show_renter', { 'id': renter.id })}}">
+                            <a href="{{ path('show_restaurant', { 'id': restaurant.id })}}">
                                 {{ 'Informacije'|trans }}
                             </a>
                         </li>
@@ -72,35 +72,35 @@
                     <ul aria-expanded="false" class="mm-collapse">
                         {# Korisnici Section #}
                         <li>
-                            <a href="{{ path('edit_renter', { 'id': renter.id })}}">
-                                {{ 'Uredi Iznajmljivača'|trans }}
+                            <a href="{{ path('edit_restaurant', { 'id': restaurant.id })}}">
+                                {{ 'Uredi Restoran'|trans }}
                             </a>
                         </li>
                         {# Korisnici Section #}
                         <li>
-                            <a href="{{ path('list_korisnici', {id: renter.id}) }}">
+                            <a href="{{ path('list_korisnici', {id: restaurant.id}) }}">
                                 {{ 'Zaposlenici'|trans }}
                             </a>
                         </li>
                         {# Vrsta Drveta Section #}
                         <li>
-                            <a href="{{ path('list_vozila', {'id': renter.id}) }}">
+                            <a href="{{ path('list_vozila', {'id': restaurant.id}) }}">
                                 {{ 'Vozila'|trans }}
                             </a>
                         </li>
                     </ul>
                 </li>
 
-            {% elseif renter is defined and renter.id is not null and isUser %}
+            {% elseif restaurant is defined and restaurant.id is not null and isUser %}
                 {# Unos Podataka Section #}
                 <li>
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-ticket-window"></i>
-                        <span class="nav-text">{{ 'Iznajmljivač'|trans }}</span>
+                        <span class="nav-text">{{ 'Restoran'|trans }}</span>
                     </a>
                     <ul aria-expanded="false" class="mm-collapse">
                         <li>
-                            <a href="{{ path('show_renter', { 'id': renter.id })}}">
+                            <a href="{{ path('show_restaurant', { 'id': restaurant.id })}}">
                                 {{ 'Informacije'|trans }}
                             </a>
                         </li>

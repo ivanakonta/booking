@@ -15,7 +15,7 @@ class KorisnikFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $renter = $options['renter']; // Get the selected Renter passed to the form
+        $restaurant = $options['restaurant']; // Get the selected restaurant passed to the form
 
         $builder
             ->add('username', null, [
@@ -60,7 +60,7 @@ class KorisnikFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Korisnik::class,
-            'renter' => null, // Define the Renter option
+            'restaurant' => null, // Define the restaurant option
         ]);
     }
 }

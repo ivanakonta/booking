@@ -3,9 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Korisnik;
-use App\Entity\Renter;
+use App\Entity\Restaurant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Svg\Tag\Rect;
 
 /**
  * @extends ServiceEntityRepository<Korisnik>
@@ -20,42 +21,42 @@ class KorisnikRepository extends ServiceEntityRepository
     /**
      * @return Korisnik[] Returns an array of Korisnik objects
      */
-    public function findByRenter(Renter $renter)
+    public function findByRestaurant(Restaurant $restaurant)
     {
         return $this->createQueryBuilder('k')
-            ->where('k.renter = :renter')
-            ->setParameter('renter', $renter)
+            ->where('k.restaurant = :restaurant')
+            ->setParameter('restaurant', $restaurant)
             ->getQuery()
             ->getResult();
     }
 
-    public function searchByQueryAndRenter(string $query, Renter $renter)
+    public function searchByQueryAndRestaurant(string $query, Restaurant $restaurant)
     {
         return $this->createQueryBuilder('k')
             ->andWhere('k.firstName LIKE :query OR k.lastName LIKE :query OR k.email LIKE :query')
-            ->andWhere('k.renter = :renter')
+            ->andWhere('k.restaurant = :restaurant')
             ->setParameter('query', '%' . $query . '%')
-            ->setParameter('renter', $renter)
+            ->setParameter('restaurant', $restaurant)
             ->getQuery()
             ->getResult();
     }
 
-    public function findActiveByRenter(Renter $renter)
+    public function findActiveByRestaurant(Restaurant $restaurant)
     {
         return $this->createQueryBuilder('k')
-            ->andWhere('k.renter = :renter')
+            ->andWhere('k.restaurant = :restaurant')
             ->andWhere('k.isActive = true')
-            ->setParameter('renter', $renter)
+            ->setParameter('restaurant', $restaurant)
             ->getQuery()
             ->getResult();
     }
 
-    public function findInactiveByRenter(Renter $renter)
+    public function findInactiveByRestaurant(Restaurant $restaurant)
     {
         return $this->createQueryBuilder('k')
-            ->andWhere('k.renter = :renter')
+            ->andWhere('k.restaurant = :restaurant')
             ->andWhere('k.isActive = false')
-            ->setParameter('renter', $renter)
+            ->setParameter('restaurant', $restaurant)
             ->getQuery()
             ->getResult();
     }

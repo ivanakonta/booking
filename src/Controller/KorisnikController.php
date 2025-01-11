@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Renter;
+use App\Entity\Restaurant;
 use App\Service\KorisnikService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,11 +28,11 @@ class KorisnikController extends AbstractController
 
     }
 
-    #[Route('/{renterId}/zaposlenik/edit/{id}', name: 'edit_korisnik')]
-    public function edit(Request $request, int $renterId, int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/{restaurantId}/zaposlenik/edit/{id}', name: 'edit_korisnik')]
+    public function edit(Request $request, int $restaurantId, int $id, EntityManagerInterface $entityManager): Response
     {
-        $this->accessCheckerService->checkAdminOrManagerAccess($renterId);
-        $renter = $entityManager->getRepository(Renter::class)->find($renterId);
+        $this->accessCheckerService->checkAdminOrManagerAccess($restaurantId);
+        $restaurant = $entityManager->getRepository(Restaurant::class)->find($restaurantId);
 
         $korisnik = $this->korisnikService->findKorisnikById($id);
 
@@ -40,7 +40,7 @@ class KorisnikController extends AbstractController
             throw $this->createNotFoundException('Zaposlenik not found');
         }
 
-        $form = $this->createForm(KorisnikFormType::class, $korisnik, ['renter' => $renter]);
+        $form = $this->createForm(KorisnikFormType::class, $korisnik, ['restaurant' => $restaurant]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -62,22 +62,22 @@ class KorisnikController extends AbstractController
                 'message' => 'Zaposlenik uspješno ažuriran.',
             ]);
 
-            return $this->redirectToRoute('list_korisnici', ['id' => $renterId]);
+            return $this->redirectToRoute('list_korisnici', ['id' => $restaurantId]);
         }
 
         return $this->render('korisnik/edit.html.twig', [
             'form' => $form->createView(),
             'pageTitle' => 'Edit Korisnik',
-            'renter' => $renter,
+            'restaurant' => $restaurant,
             'korisnik' => $korisnik,
-            'renterId' => $renterId
+            'restaurantId' => $restaurantId
         ]);
     }
 
-    #[Route('/{renterId}/zaposlenik/delete/{id}', name: 'delete_korisnik')]
-    public function delete(int $renterId, int $id): Response
+    #[Route('/{restaurantId}/zaposlenik/delete/{id}', name: 'delete_korisnik')]
+    public function delete(int $restaurantId, int $id): Response
     {
-        $this->accessCheckerService->checkAdminOrManagerAccess($renterId);
+        $this->accessCheckerService->checkAdminOrManagerAccess($restaurantId);
 
         $korisnik = $this->korisnikService->findKorisnikById($id);
 
@@ -103,6 +103,6 @@ class KorisnikController extends AbstractController
             ]);
         }
 
-        return $this->redirectToRoute('list_korisnici', ['id' => $renterId]);
+        return $this->redirectToRoute('list_korisnici', ['id' => $restaurantId]);
     }
 }

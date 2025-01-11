@@ -20,8 +20,8 @@
             <div class="form-head d-flex mb-3 mb-md-5 align-items-start flex-wrap">
                 <div class="me-auto">
                     <h3 class="font-w600 mb-0 fs-22 mb-2">
-                        <span class="text-black">Renter Slug: {{renter.slug}} </span><br>
-                        <span class="text-primary">Renter ID: {{renter.id}} </span>
+                        <span class="text-black">Restaurant Slug: {{restaurant.slug}} </span><br>
+                        <span class="text-primary">Restaurant ID: {{restaurant.id}} </span>
                     </h3>
                     {# <span class="mb-0 font-w500">
                         <span class="text-black">User:</span>
@@ -34,7 +34,7 @@
                 <div class="basic-form">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Postavi informacije Iznajmljivača</h4>
+                            <h4 class="card-title">Postavi informacije Restorana</h4>
                         </div>
                         <div class="card-body">
                             <div class="mb-3 row">
@@ -58,11 +58,11 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label class="col-sm-4 col-md-3 col-form-label">Iznajmljivač aktivan ili ne</label>
+                                <label class="col-sm-4 col-md-3 col-form-label">Restoran aktivan ili ne</label>
                                 <div class="col-sm-6 col-md-6 col-lg-4">
                                     <div class="form-check">
                                         {{ form_row(form.isActive, {'attr': {'class': 'form-check-input'}, 'label': false  }) }}
-                                        <label class="form-check-label">Iznajmljivač aktivan</label>
+                                        <label class="form-check-label">Restoran aktivan</label>
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                                 <label class="col-sm-4 col-md-3 col-form-label">Logo [150 x 150 px]</label>
                                 <div class="col-sm-8 col-md-6 col-xl-4">
                                     <div class="img-thumbnail restaurant-wrap-image" >
-                                        <img src="{{ asset(image_dir ~ renter.logo) }}" class="restaurant-image" alt="Renter Logo">
+                                        <img src="{{ asset(image_dir ~ restaurant.logo) }}" class="restaurant-image" alt="restaurant Logo">
                                     </div>
                                     {{ form_row(form.logo, {'attr': {'class': 'form-control'}, 'label': 'Upload New Logo'}) }}
                                 </div>
@@ -154,20 +154,20 @@
             {{ form_end(form) }}
         </div>
 
-        {{ include('renter/disableBookingToday.html.twig', {
-            renter: renter,
+        {{ include('restaurant/disableBookingToday.html.twig', {
+            restaurant: restaurant,
             isTodayNonWorkingDay: isTodayNonWorkingDay,
         }, with_context = false) }}
-        {{ include('renter/nonWorkingDaysList.html.twig', {
+        {{ include('restaurant/nonWorkingDaysList.html.twig', {
             nonWorkingDays: form.vars.value.nonWorkingDays,
         }, with_context = false) }}
-        {{ include('renter/nonWorkingDaysForm.html.twig', {
+        {{ include('restaurant/nonWorkingDaysForm.html.twig', {
             nonWorkingDaysForm: nonWorkingDaysForm,
         }, with_context = false) }}
-        {{ include('renter/workingDaysList.html.twig', {
+        {{ include('restaurant/workingDaysList.html.twig', {
             addWorkingDays: form.vars.value.workingDays,
         }, with_context = false) }}
-        {{ include('renter/workingDaysForm.html.twig', {
+        {{ include('restaurant/workingDaysForm.html.twig', {
             addWorkingDaysForm: addWorkingDaysForm,
         }, with_context = false) }}
 

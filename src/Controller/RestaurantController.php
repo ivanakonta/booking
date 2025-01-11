@@ -3,16 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\NonWorkingDays;
-use App\Entity\Renter;
+use App\Entity\Restaurant;
 use App\Entity\WorkingDays;
-use App\Form\AddWorkingDaysFormType;
 use App\Form\NonWorkingDaysFormType;
-use App\Form\RenterFormType;
+use App\Form\RestaurantFormType;
 use App\Form\WorkingDaysFormType;
 use App\Repository\KorisnikRepository;
 use App\Service\AccessCheckerService;
-use App\Service\KorisnikService;
-use App\Service\RenterService;
+use App\Service\RestaurantService;
 use App\Service\SlugUniqueChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,34 +24,34 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class RenterController extends AbstractController
+class RestaurantController extends AbstractController
 {
-    private RenterService $renterService;
+    private RestaurantService $restaurantService;
     private SluggerInterface $slugger;
     private SlugUniqueChecker $slugUniqueChecker;
     private AccessCheckerService $accessCheckerService;
 
 
     public function __construct(
-        RenterService $renterService,
+        RestaurantService $restaurantService,
         SluggerInterface $slugger,
         SlugUniqueChecker $slugUniqueChecker,
         AccessCheckerService $accessCheckerService
 
     ) {
-        $this->renterService = $renterService;
+        $this->restaurantService = $restaurantService;
         $this->slugger = $slugger;
         $this->slugUniqueChecker = $slugUniqueChecker;
         $this->accessCheckerService = $accessCheckerService;
     }
 
-    #[Route('/renter/create', name: 'new_renter')]
+    #[Route('/restaurant/create', name: 'new_restaurant')]
     public function create(Request $request): Response
     {
         $this->accessCheckerService->checkAdminAccess();
 
-        $renter = new Renter();
-        $form = $this->createForm(RenterFormType::class, $renter);
+        $restaurant = new Restaurant();
+        $form = $this->createForm(RestaurantFormType::class, $restaurant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -63,54 +61,54 @@ class RenterController extends AbstractController
                 try {
                     $this->handleFileUpload(
                         $logo,
-                        $renter,
+                        $restaurant,
                         'logo',
-                        null // No original logo path for new Renter
+                        null // No original logo path for new restaurant
                     );
                 } catch (\RuntimeException $e) {
                     return new Response($e->getMessage());
                 }
             }
 
-            $this->renterService->createRenter($renter); // Pass the Renter object to the service
+            $this->restaurantService->createRestaurant($restaurant); // Pass the restaurant object to the service
 
             $this->addFlash('success', [
-                'title' => 'Iznajmljivač kreiran',
-                'message' => 'Iznamljivač kreiran uspješno.',
+                'title' => 'Restoran kreiran',
+                'message' => 'Restoran kreiran uspješno.',
             ]);
-            return $this->redirectToRoute('renter'); // Adjust the route name to your actual index route
+            return $this->redirectToRoute('restaurant'); // Adjust the route name to your actual index route
         }
 
-        return $this->render('renter/new.html.twig', [
+        return $this->render('restaurant/new.html.twig', [
             'form' => $form->createView(),
-            'pageTitle' => "Kreiranje Iznajmljivača",
-            'renter' => $renter,
+            'pageTitle' => "Kreiranje Restorana",
+            'restaurant' => $restaurant,
         ]);
     }
 
-    #[Route('/renter/', name: 'renter')]
+    #[Route('/restaurant/', name: 'restaurant')]
     public function index(): Response
     {
         $this->accessCheckerService->checkAdminAccess();
 
-        $renters = $this->renterService->getAllRenters();
+        $restaurants = $this->restaurantService->getAllRestaurants();
 
-        return $this->render('renter/show.html.twig', [
-            'renters' => $renters,
-            'pageTitle' => 'Lista Iznamljivača',
+        return $this->render('restaurant/show.html.twig', [
+            'restaurants' => $restaurants,
+            'pageTitle' => 'Lista restorana',
         ]);
     }
 
-    #[Route('/renter/{id}/edit', name: 'edit_renter')]
+    #[Route('/restaurant/{id}/edit', name: 'edit_restaurant')]
     public function edit(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->accessCheckerService->checkAdminOrManagerAccess($id);
 
-        $renter = $this->renterService->getRenterById($id);
+        $restaurant = $this->restaurantService->getRestaurantById($id);
 
-        $originalLogoPath = $renter->getLogo();
+        $originalLogoPath = $restaurant->getLogo();
 
-        $form = $this->createForm(RenterFormType::class, $renter);
+        $form = $this->createForm(RestaurantFormType::class, $restaurant);
         $form->handleRequest($request);
 
 
@@ -129,7 +127,7 @@ class RenterController extends AbstractController
                 try {
                     $this->handleFileUpload(
                         $logo,
-                        $renter,
+                        $restaurant,
                         'logo',
                         $originalLogoPath
                     );
@@ -138,14 +136,14 @@ class RenterController extends AbstractController
                 }
             }
 
-            $this->renterService->updateRenter($renter);
+            $this->restaurantService->updateRestaurant($restaurant);
 
             $this->addFlash('success', [
-                'title' => 'Iznajmljivač ažurirana',
-                'message' => 'Iznajmljivač ažuriran uspješno.',
+                'title' => 'Restoran ažuriran',
+                'message' => 'Restoran ažuriran uspješno.',
             ]);
 
-            return $this->redirectToRoute('show_renter', ['id' => $renter->getId()]);
+            return $this->redirectToRoute('show_restaurant', ['id' => $restaurant->getId()]);
         }
 
         // Handle form submission for non-working days
@@ -156,7 +154,7 @@ class RenterController extends AbstractController
             // Check if a non-working day with the same date already exists for the restaurant
             $existingNonWorkingDay = $entityManager->getRepository(NonWorkingDays::class)
                 ->findOneBy([
-                    'renter' => $renter,
+                    'restaurant' => $restaurant,
                     'date' => $nonWorkingDaysData->getDate(),
                 ]);
 
@@ -192,7 +190,7 @@ class RenterController extends AbstractController
                     $nonWorkingDays->setDescription($nonWorkingDaysData->getDescription());
 
                     // Add the non-working day to the restaurant
-                    $renter->addNonWorkingDay($nonWorkingDays);
+                    $restaurant->addNonWorkingDay($nonWorkingDays);
 
                     // Persist the new NonWorkingDays entity
                     $entityManager->persist($nonWorkingDays);
@@ -207,7 +205,7 @@ class RenterController extends AbstractController
             }
 
             // Redirect to the edit restaurant page
-            return $this->redirectToRoute('edit_renter', ['id' => $renter->getId()]);
+            return $this->redirectToRoute('edit_restaurant', ['id' => $restaurant->getId()]);
         }
 
         // Handle form submission for working days
@@ -218,7 +216,7 @@ class RenterController extends AbstractController
             // Check if a non-working day with the same date already exists for the restaurant
             $existingAddWorkingDay = $entityManager->getRepository(WorkingDays::class)
                 ->findOneBy([
-                    'renter' => $renter,
+                    'restaurant' => $restaurant,
                     'date' => $addWorkingDaysData->getDate(),
                 ]);
 
@@ -250,7 +248,7 @@ class RenterController extends AbstractController
                     $addWorkingDays->setDescription($addWorkingDaysData->getDescription());
 
                     // Add the working day to the restaurant
-                    $renter->addWorkingDay($addWorkingDays);
+                    $restaurant->addWorkingDay($addWorkingDays);
 
                     // Persist the new AddWorkingDays entity
                     $entityManager->persist($addWorkingDays);
@@ -264,7 +262,7 @@ class RenterController extends AbstractController
                 }
             }
             // Redirect to the edit restaurant page
-            return $this->redirectToRoute('edit_renter', ['id' => $renter->getId()]);
+            return $this->redirectToRoute('edit_restaurant', ['id' => $restaurant->getId()]);
         }
 
         // Check if today is a non-working day
@@ -273,24 +271,24 @@ class RenterController extends AbstractController
 
         $nonWorkingDayRepo = $entityManager->getRepository(NonWorkingDays::class);
         $existingNonWorkingDay = $nonWorkingDayRepo->findOneBy([
-            'renter' => $renter,
+            'restaurant' => $restaurant,
             'date' => $today->format('Y-m-d'),
         ]);
 
         $isTodayNonWorkingDay = $existingNonWorkingDay !== null;
 
-        return $this->render('renter/edit.html.twig', [
+        return $this->render('restaurant/edit.html.twig', [
             'form' => $form->createView(),
             'nonWorkingDaysForm' => $nonWorkingDaysForm->createView(),
             'addWorkingDaysForm' => $addWorkingDaysForm->createView(),
-            'pageTitle' => "Uredi Iznajmljivača: " . $renter->getName(),
-            'renter' => $renter,
+            'pageTitle' => "Uredi restoran: " . $restaurant->getName(),
+            'restaurant' => $restaurant,
             'isTodayNonWorkingDay' => $isTodayNonWorkingDay,
 
         ]);
     }
 
-    #[Route('/renter/{id}', name: 'show_renter')]
+    #[Route('/restaurant/{id}', name: 'show_restaurant')]
     public function show(int $id): Response
     {
         try {
@@ -300,15 +298,15 @@ class RenterController extends AbstractController
             $this->accessCheckerService->checkUserAccess($id);
         }
 
-        $renter = $this->renterService->getRenterById($id);
+        $restaurant = $this->restaurantService->getRestaurantById($id);
 
-        return $this->render('renter/show_single.html.twig', [
-            'renter' => $renter,
-            'pageTitle' => 'Iznajmljivač: ' . $renter->getName(),
+        return $this->render('restaurant/show_single.html.twig', [
+            'restaurant' => $restaurant,
+            'pageTitle' => 'Restoran: ' . $restaurant->getName(),
         ]);
     }
 
-    #[Route('/renter/ajax/check-unique-slugs', name: 'check_unique_slugs', methods: ['POST'])]
+    #[Route('/restaurant/ajax/check-unique-slugs', name: 'check_unique_slugs', methods: ['POST'])]
     public function checkUniqueSlugs(Request $request): JsonResponse
     {
         if (!$request->isXmlHttpRequest()) {
@@ -327,7 +325,7 @@ class RenterController extends AbstractController
 
     private function handleFileUpload(
         UploadedFile $file,
-        Renter $renter,
+        restaurant $restaurant,
         string $type,
         ?string $originalFilePath
     ): void {
@@ -336,18 +334,18 @@ class RenterController extends AbstractController
 
         try {
             $file->move(
-                $this->getParameter('kernel.project_dir').$workImageDir.'/renter/',
+                $this->getParameter('kernel.project_dir').$workImageDir.'/restaurant/',
                 $newFileName
             );
         } catch (FileException $e) {
             throw new \RuntimeException($e->getMessage());
         }
 
-        $newFilePath = '/renter/'.$newFileName;
+        $newFilePath = '/restaurant/'.$newFileName;
 
         switch ($type) {
             case 'logo':
-                $renter->setLogo($newFilePath);
+                $restaurant->setLogo($newFilePath);
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid file type provided.');
@@ -361,15 +359,15 @@ class RenterController extends AbstractController
         }
     }
 
-    #[Route('/renter/{id}/zaposlenici', name: 'list_korisnici')]
+    #[Route('/restaurant/{id}/zaposlenici', name: 'list_korisnici')]
     public function listKorisnici(int $id, Request $request, KorisnikRepository $korisnikRepository, EntityManagerInterface $entityManager): Response
     {
         $this->accessCheckerService->checkAdminOrManagerAccess($id);
 
-        $renter = $entityManager->getRepository(Renter::class)->find($id);
+        $restaurant = $entityManager->getRepository(Restaurant::class)->find($id);
 
-        if (!$renter) {
-            throw $this->createNotFoundException('Renter not found');
+        if (!$restaurant) {
+            throw $this->createNotFoundException('restaurant not found');
         }
 
         // Get filter type from request (either 'active' or 'inactive')
@@ -379,21 +377,21 @@ class RenterController extends AbstractController
         $searchQuery = $request->query->get('search');
 
         if ($searchQuery) {
-            $korisnici = $korisnikRepository->searchByQueryAndRenter($searchQuery, $renter);
+            $korisnici = $korisnikRepository->searchByQueryAndRestaurant($searchQuery, $restaurant);
         } else {
             if ($filter === 'active') {
-                $korisnici = $korisnikRepository->findActiveByRenter($renter);
+                $korisnici = $korisnikRepository->findActiveByRestaurant($restaurant);
             } elseif ($filter === 'inactive') {
-                $korisnici = $korisnikRepository->findInactiveByRenter($renter);
+                $korisnici = $korisnikRepository->findInactiveByRestaurant($restaurant);
             } else {
-                $korisnici = $korisnikRepository->findByRenter($renter);
+                $korisnici = $korisnikRepository->findByRestaurant($restaurant);
             }
         }
 
         return $this->render('korisnik/korisnici.html.twig', [
             'korisnici' => $korisnici,
-            'renter' => $renter,
-            'pageTitle' => 'Korisnici for Iznajmljivač: ' . $renter->getName(),
+            'restaurant' => $restaurant,
+            'pageTitle' => 'Korisnici for Restoran: ' . $restaurant->getName(),
             'searchQuery' => $searchQuery,
             'filter' => $filter,
         ]);

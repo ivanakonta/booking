@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Korisnik;
-use App\Entity\Renter;
+use App\Entity\Restaurant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
-class RenterFormType extends AbstractType
+class RestaurantFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -39,9 +39,6 @@ class RenterFormType extends AbstractType
             ])
             ->add('mobitel')
             ->add('isActive')
-            ->add('monriPublicKey')
-            ->add('monriSecretKey')
-            ->add('googleCalendar')
             ->add('created_at', null, [
                 'widget' => 'single_text',
             ])
@@ -68,7 +65,7 @@ class RenterFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Renter::class,
+            'data_class' => Restaurant::class,
         ]);
     }
 }

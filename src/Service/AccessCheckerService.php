@@ -1,7 +1,7 @@
 <?php
 namespace App\Service;
 
-use App\Entity\Renter;
+use App\Entity\Restaurant;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,12 +27,12 @@ class AccessCheckerService
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    public function checkUserAccess(int $renterId): void
+    public function checkUserAccess(int $restaurantId): void
     {
-        // Fetch Renter by ID
-        $renter = $this->entityManager->getRepository(Renter::class)->find($renterId);
-        if (!$renter) {
-            throw new NotFoundHttpException('Renter not found.');
+        // Fetch restaurant by ID
+        $restaurant = $this->entityManager->getRepository(Restaurant::class)->find($restaurantId);
+        if (!$restaurant) {
+            throw new NotFoundHttpException('restaurant not found.');
         }
 
         // Fetch the current user
@@ -41,11 +41,11 @@ class AccessCheckerService
             throw new AccessDeniedException('You must be logged in to access this resource.');
         }
 
-        // Check if the user has a relation with the Renter
-        $this->korisnikService->checkUserRenterAssociation($korisnik, $renter);
+        // Check if the user has a relation with the restaurant
+        $this->korisnikService->checkUserRestaurantAssociation($korisnik, $restaurant);
     }
 
-    public function checkUserOrAdminAccess(int $renterId): void
+    public function checkUserOrAdminAccess(int $restaurantId): void
     {
         $korisnik = $this->security->getUser();
 
@@ -54,14 +54,14 @@ class AccessCheckerService
             return; // Admin has access to all
         }
 
-        // If not an admin, check if the user has access to the specific Renter
-        $renter = $this->entityManager->getRepository(Renter::class)->find($renterId);
+        // If not an admin, check if the user has access to the specific restaurant
+        $restaurant = $this->entityManager->getRepository(Restaurant::class)->find($restaurantId);
 
-        $this->korisnikService->checkUserRenterAssociation($korisnik, $renter);
+        $this->korisnikService->checkUserRestaurantAssociation($korisnik, $restaurant);
 
     }
 
-    public function checkAdminOrManagerAccess(int $renterId): void
+    public function checkAdminOrManagerAccess(int $restaurantId): void
     {
         // Fetch the current user
         $korisnik = $this->security->getUser();
@@ -74,15 +74,15 @@ class AccessCheckerService
             return; // Admins have access
         }
 
-        // Fetch Renter by ID
-        $renter = $this->entityManager->getRepository(Renter::class)->find($renterId);
-        if (!$renter) {
-            throw new NotFoundHttpException('Renter not found.');
+        // Fetch restaurant by ID
+        $restaurant = $this->entityManager->getRepository(Restaurant::class)->find($restaurantId);
+        if (!$restaurant) {
+            throw new NotFoundHttpException('restaurant not found.');
         }
 
-        // Check if the user is a manager and has a relation with the Renter
+        // Check if the user is a manager and has a relation with the restaurant
         if ($this->authorizationChecker->isGranted('ROLE_MANAGER')) {
-            $this->korisnikService->checkUserRenterAssociation($korisnik, $renter);
+            $this->korisnikService->checkUserRestaurantAssociation($korisnik, $restaurant);
             return; // Manager with a valid relation has access
         }
 

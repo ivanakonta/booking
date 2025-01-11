@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\Renter;
+use App\Entity\Restaurant;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SlugUniqueChecker
@@ -16,9 +16,9 @@ class SlugUniqueChecker
 
     public function isSlugUnique(string $slug)
     {
-        $repository = $this->entityManager->getRepository(Renter::class);
-        $renter = $repository->findOneBy(['slug' => $slug]);
+        $repository = $this->entityManager->getRepository(Restaurant::class);
+        $restaurant = $repository->findOneBy(['slug' => $slug]);
 
-        return $renter === null;
+        return $restaurant === null;
     }
 }

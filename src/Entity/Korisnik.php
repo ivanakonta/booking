@@ -30,7 +30,7 @@ class Korisnik implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\ManyToOne(inversedBy: 'korisniks')]
-    private ?Renter $renter = null;
+    private ?Restaurant $restaurant = null;
 
     /**
      * @var list<string> The user roles
@@ -89,14 +89,14 @@ class Korisnik implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRenter(): ?Renter
+    public function getRestaurant(): ?Restaurant
     {
-        return $this->renter;
+        return $this->restaurant;
     }
 
-    public function setRenter(?Renter $renter): static
+    public function setRestaurant(?Restaurant $restaurant): static
     {
-        $this->renter = $renter;
+        $this->restaurant = $restaurant;
 
         return $this;
     }

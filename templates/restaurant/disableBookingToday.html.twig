@@ -25,8 +25,8 @@
     function toggleBooking() {
         const checkbox = document.getElementById('bookingToggle');
         const url = checkbox.checked
-            ? '{{ path('disable_booking_today', {'id': renter.id}) }}'
-            : '{{ path('disable_booking_today', {'id': renter.id}) }}';
+            ? '{{ path('disable_booking_today', {'id': restaurant.id}) }}'
+            : '{{ path('disable_booking_today', {'id': restaurant.id}) }}';
 
         window.location.href = url;
     }

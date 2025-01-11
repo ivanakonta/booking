@@ -67,7 +67,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         if (in_array('ROLE_ADMIN', $roles)) {
             // Redirect admin to /pilane
-            return new RedirectResponse($this->urlGenerator->generate('renter'));
+            return new RedirectResponse($this->urlGenerator->generate('restaurant'));
         }
 
         // For other roles or no specific role, redirect to the default target path
@@ -75,10 +75,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // Check if the user has a renter
-        if ($korisnik->getRenter()) {
+        // Check if the user has a restaurant
+        if ($korisnik->getRestaurant()) {
             // Redirect to the palana's page
-            return new RedirectResponse($this->urlGenerator->generate('show_renter', ['id' => $korisnik->getRenter()->getId()]));
+            return new RedirectResponse($this->urlGenerator->generate('show_restaurant', ['id' => $korisnik->getRestaurant()->getId()]));
         }
 
         // Fallback to a default route, adjust as needed

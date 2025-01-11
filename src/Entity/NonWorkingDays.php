@@ -14,7 +14,7 @@ class NonWorkingDays
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'nonWorkingDays')]
-    private ?Renter $renter = null;
+    private ?Restaurant $restaurant = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $date = null;
@@ -27,14 +27,14 @@ class NonWorkingDays
         return $this->id;
     }
 
-    public function getRenter(): ?Renter
+    public function getRestaurant(): ?Restaurant
     {
-        return $this->renter;
+        return $this->restaurant;
     }
 
-    public function setRenter(?Renter $renter): static
+    public function setRestaurant(?Restaurant $restaurant): static
     {
-        $this->renter = $renter;
+        $this->restaurant = $restaurant;
 
         return $this;
     }

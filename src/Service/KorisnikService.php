@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Korisnik;
 use App\Entity\Renter;
+use App\Entity\Restaurant;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -42,14 +43,14 @@ class KorisnikService
     }
 
     /**
-     * Check if the Korisnik is associated with the given Renter.
+     * Check if the Korisnik is associated with the given restaurant.
      *
      * @throws AccessDeniedException if the Korisnik does not have access.
      */
-    public function checkUserRenterAssociation(Korisnik $korisnik, Renter $renter): void
+    public function checkUserRestaurantAssociation(Korisnik $korisnik, Restaurant $restaurant): void
     {
-        if ($korisnik->getRenter() === null || $korisnik->getRenter()->getId() !== $renter->getId()) {
-            throw new AccessDeniedException('You do not have permission to access this Renter.');
+        if ($korisnik->getRestaurant() === null || $korisnik->getRestaurant()->getId() !== $restaurant->getId()) {
+            throw new AccessDeniedException('You do not have permission to access this restaurant.');
         }
     }
 }

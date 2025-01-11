@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Korisnik;
-use App\Entity\Renter;
+use App\Entity\Restaurant;
 use App\Form\RegistrationFormType;
 use App\Service\AccessCheckerService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,26 +22,26 @@ class RegistrationController extends AbstractController
         $this->accessCheckerService = $accessCheckerService;
     }
 
-    #[Route('/register/{renterId}', name: 'app_register')]
+    #[Route('/register/{restaurantId}', name: 'app_register')]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
-        ?int $renterId = null // Optional parameter
+        ?int $restaurantId = null // Optional parameter
     ): Response {
-        $this->accessCheckerService->checkAdminOrManagerAccess($renterId);
+        $this->accessCheckerService->checkAdminOrManagerAccess($restaurantId);
 
-        $renter = $entityManager->getRepository(Renter::class)->find($renterId);
+        $restaurant = $entityManager->getRepository(Restaurant::class)->find($restaurantId);
         $korisnik = new Korisnik();
-        $form = $this->createForm(RegistrationFormType::class, $korisnik, ['renter' => $renter]);
+        $form = $this->createForm(RegistrationFormType::class, $korisnik, ['restaurant' => $restaurant]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $selectedRole = $form->get('role')->getData();
             $korisnik->setRoles([$selectedRole]);
 
-            if ($renter) {
-                $korisnik->setRenter($renter);
+            if ($restaurant) {
+                $korisnik->setRestaurant($restaurant);
             }
 
             $korisnik->setPassword($userPasswordHasher->hashPassword($korisnik, $form->get('password')->getData()));
@@ -49,12 +49,12 @@ class RegistrationController extends AbstractController
             $entityManager->persist($korisnik);
             $entityManager->flush();
 
-            return $this->redirectToRoute('list_korisnici', ['id' => $renter->getId()]);
+            return $this->redirectToRoute('list_korisnici', ['id' => $restaurant->getId()]);
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-            'renter' => $renter
+            'restaurant' => $restaurant
         ]);
     }
 }

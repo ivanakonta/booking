@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\AddWorkingDays;
 use App\Entity\NonWorkingDays;
-use App\Entity\Renter;
 use App\Entity\Restaurant;
 use App\Entity\WorkingDays;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +31,7 @@ class WorkingDaysController extends AbstractController
         $this->addFlash('success', ['title' => 'Radni dan izbrisan', 'message' => 'Radni dan uspješno izbrisan.']);
 
         // Redirect to the edit restaurant page or any other desired page
-        return $this->redirectToRoute('edit_renter', ['id' => $addWorkingDay->getRenter()->getId()]);
+        return $this->redirectToRoute('edit_restaurant', ['id' => $addWorkingDay->getRestaurant()->getId()]);
     }
 
     #[Route('/non-working-day-remove/{id}', name: 'remove_non_working_day')]
@@ -53,16 +52,16 @@ class WorkingDaysController extends AbstractController
         $this->addFlash('success', ['title' => 'Neradni dan izbrisan', 'message' => 'Neradni dan uspješno izbrisan.']);
 
         // Redirect to the edit restaurant page or any other desired page
-        return $this->redirectToRoute('edit_renter', ['id' => $nonWorkingDay->getRenter()->getId()]);
+        return $this->redirectToRoute('edit_restaurant', ['id' => $nonWorkingDay->getRestaurant()->getId()]);
     }
 
     #[Route('/non-working-day-add-today/{id}', name: 'disable_booking_today')]
     public function disableBookingToday(int $id, EntityManagerInterface $entityManager): Response
     {
-        $renter = $entityManager->getRepository(Renter::class)->find($id);
+        $restaurant = $entityManager->getRepository(Restaurant::class)->find($id);
 
-        if (!$renter) {
-            throw $this->createNotFoundException('Renter not found');
+        if (!$restaurant) {
+            throw $this->createNotFoundException('restaurant not found');
         }
 
         $today = new \DateTime();
@@ -70,7 +69,7 @@ class WorkingDaysController extends AbstractController
 
         $nonWorkingDayRepo = $entityManager->getRepository(NonWorkingDays::class);
         $existingNonWorkingDay = $nonWorkingDayRepo->findOneBy([
-            'renter' => $renter,
+            'restaurant' => $restaurant,
             'date' => $today->format('Y-m-d'),
         ]);
 
@@ -89,7 +88,7 @@ class WorkingDaysController extends AbstractController
             $nonWorkingDays->setDate($today->format('Y-m-d'));
             $nonWorkingDays->setDescription('Disabled Booking for ' . $today->format('d.m.Y'));
 
-            $renter->addNonWorkingDay($nonWorkingDays);
+            $restaurant->addNonWorkingDay($nonWorkingDays);
             $entityManager->persist($nonWorkingDays);
             $entityManager->flush();
 
@@ -99,6 +98,6 @@ class WorkingDaysController extends AbstractController
             ]);
         }
 
-        return $this->redirectToRoute('edit_renter', ['id' => $id]);
+        return $this->redirectToRoute('edit_restaurant', ['id' => $id]);
     }
 }

@@ -4,9 +4,9 @@
 {% block header %}
     <div class="nav-header" style="background-color:#d8d8d8">
         <a href="/" class="brand-logo">
-            <img class="logo-abbr show-on-small" src="{{ renter.logo is defined and renter.logo is not empty ? asset(image_dir ~ renter.logo) : asset('images/renting-logo.png') }}" alt="">
-            <img class="logo-compact" src="{{ renter.logo is defined and renter.logo is not empty ? asset(image_dir ~ renter.logo) : asset('images/renting-full.png') }}" alt="">
-            <img class="brand-title" src="{{ renter.logo is defined and renter.logo is not empty ? asset(image_dir ~ renter.logo) : asset('images/renting-full.png') }}" alt="">
+            <img class="logo-abbr show-on-small" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/renting-logo.png') }}" alt="">
+            <img class="logo-compact" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/renting-full.png') }}" alt="">
+            <img class="brand-title" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/renting-full.png') }}" alt="">
         </a>
 
         <div class="nav-control" >
@@ -47,7 +47,7 @@
 
                                     <span>{{ app.user ? app.user.firstName : 'Please Log In' }}</span>
                                 </div>
-                                    <img src="{{ renter.logo is defined and renter.logo is not empty ? asset(image_dir ~ renter.logo) : asset('images/renting-logo.png') }}"
+                                    <img src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/renting-logo.png') }}"
                                         width="20"
                                         alt="Default Image"
                                     >

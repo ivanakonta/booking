@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\RenterRepository;
+use App\Repository\RestaurantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: RenterRepository::class)]
-class Renter
+#[ORM\Entity(repositoryClass: RestaurantRepository::class)]
+class Restaurant
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,7 +27,7 @@ class Renter
     /**
      * @var Collection<int, Korisnik>
      */
-    #[ORM\OneToMany(targetEntity: Korisnik::class, mappedBy: 'renter')]
+    #[ORM\OneToMany(targetEntity: Korisnik::class, mappedBy: 'restaurant')]
     private Collection $korisniks;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -54,31 +54,16 @@ class Renter
     #[ORM\Column(nullable: true)]
     private ?array $days = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $monriSecretKey = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $monriPublicKey = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $googleCalendar = null;
-
-    /**
-     * @var Collection<int, Vehicle>
-     */
-    #[ORM\OneToMany(targetEntity: Vehicle::class, mappedBy: 'renter')]
-    private Collection $vehicles;
-
     /**
      * @var Collection<int, NonWorkingDays>
      */
-    #[ORM\OneToMany(targetEntity: NonWorkingDays::class, mappedBy: 'renter')]
+    #[ORM\OneToMany(targetEntity: NonWorkingDays::class, mappedBy: 'restaurant')]
     private Collection $nonWorkingDays;
 
     /**
      * @var Collection<int, WorkingDays>
      */
-    #[ORM\OneToMany(targetEntity: WorkingDays::class, mappedBy: 'renter')]
+    #[ORM\OneToMany(targetEntity: WorkingDays::class, mappedBy: 'restaurant')]
     private Collection $workingDays;
 
     public function __construct()
@@ -86,7 +71,6 @@ class Renter
         $this->korisniks = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
         $this->modified_at = new \DateTimeImmutable();
-        $this->vehicles = new ArrayCollection();
         $this->nonWorkingDays = new ArrayCollection();
         $this->workingDays = new ArrayCollection();
     }
@@ -144,7 +128,7 @@ class Renter
     {
         if (!$this->korisniks->contains($korisnik)) {
             $this->korisniks->add($korisnik);
-            $korisnik->setRenter($this);
+            $korisnik->setRestaurant($this);
         }
 
         return $this;
@@ -154,8 +138,8 @@ class Renter
     {
         if ($this->korisniks->removeElement($korisnik)) {
             // set the owning side to null (unless already changed)
-            if ($korisnik->getRenter() === $this) {
-                $korisnik->setRenter(null);
+            if ($korisnik->getRestaurant() === $this) {
+                $korisnik->setRestaurant(null);
             }
         }
 
@@ -257,72 +241,6 @@ class Renter
         return $this;
     }
 
-    public function getMonriPublicKey(): ?string
-    {
-        return $this->monriSecretKey;
-    }
-
-    public function setMonriPublicKey(?string $monriSecretKey): static
-    {
-        $this->monriSecretKey = $monriSecretKey;
-
-        return $this;
-    }
-
-    public function getMonriSecretKey(): ?string
-    {
-        return $this->monriSecretKey;
-    }
-
-    public function setMonriSecretKey(?string $monriSecretKey): static
-    {
-        $this->monriSecretKey = $monriSecretKey;
-
-        return $this;
-    }
-
-    public function getGoogleCalendar(): ?string
-    {
-        return $this->googleCalendar;
-    }
-
-    public function setGoogleCalendar(?string $googleCalendar): static
-    {
-        $this->googleCalendar = $googleCalendar;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Vehicle>
-     */
-    public function getVehicles(): Collection
-    {
-        return $this->vehicles;
-    }
-
-    public function addVehicle(Vehicle $vehicle): static
-    {
-        if (!$this->vehicles->contains($vehicle)) {
-            $this->vehicles->add($vehicle);
-            $vehicle->setRenter($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVehicle(Vehicle $vehicle): static
-    {
-        if ($this->vehicles->removeElement($vehicle)) {
-            // set the owning side to null (unless already changed)
-            if ($vehicle->getRenter() === $this) {
-                $vehicle->setRenter(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, NonWorkingDays>
      */
@@ -335,7 +253,7 @@ class Renter
     {
         if (!$this->nonWorkingDays->contains($nonWorkingDay)) {
             $this->nonWorkingDays->add($nonWorkingDay);
-            $nonWorkingDay->setRenter($this);
+            $nonWorkingDay->setRestaurant($this);
         }
 
         return $this;
@@ -345,8 +263,8 @@ class Renter
     {
         if ($this->nonWorkingDays->removeElement($nonWorkingDay)) {
             // set the owning side to null (unless already changed)
-            if ($nonWorkingDay->getRenter() === $this) {
-                $nonWorkingDay->setRenter(null);
+            if ($nonWorkingDay->getRestaurant() === $this) {
+                $nonWorkingDay->setRestaurant(null);
             }
         }
 
@@ -365,7 +283,7 @@ class Renter
     {
         if (!$this->workingDays->contains($workingDay)) {
             $this->workingDays->add($workingDay);
-            $workingDay->setRenter($this);
+            $workingDay->setRestaurant($this);
         }
 
         return $this;
@@ -375,8 +293,8 @@ class Renter
     {
         if ($this->workingDays->removeElement($workingDay)) {
             // set the owning side to null (unless already changed)
-            if ($workingDay->getRenter() === $this) {
-                $workingDay->setRenter(null);
+            if ($workingDay->getRestaurant() === $this) {
+                $workingDay->setRestaurant(restaurant: null);
             }
         }
 
