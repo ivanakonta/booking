@@ -78,6 +78,12 @@ class Restaurant
     #[ORM\OneToMany(targetEntity: TimeSlot::class, mappedBy: 'restaurant')]
     private Collection $timeSlot;
 
+    /**
+     * @var Collection<int, Guest>
+     */
+    #[ORM\ManyToMany(targetEntity: Guest::class, mappedBy: 'restaurant')]
+    private Collection $guests;
+
     public function __construct()
     {
         $this->korisniks = new ArrayCollection();
@@ -86,6 +92,7 @@ class Restaurant
         $this->nonWorkingDays = new ArrayCollection();
         $this->workingDays = new ArrayCollection();
         $this->timeSlot = new ArrayCollection();
+        $this->guests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -363,6 +370,33 @@ class Restaurant
             if ($timeSlot->getRestaurant() === $this) {
                 $timeSlot->setRestaurant(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Guest>
+     */
+    public function getGuests(): Collection
+    {
+        return $this->guests;
+    }
+
+    public function addGuest(Guest $guest): static
+    {
+        if (!$this->guests->contains($guest)) {
+            $this->guests->add($guest);
+            $guest->addRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGuest(Guest $guest): static
+    {
+        if ($this->guests->removeElement($guest)) {
+            $guest->removeRestaurant($this);
         }
 
         return $this;
