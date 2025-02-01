@@ -101,7 +101,7 @@
                                 <br>
                             </div>
                             <div class="mb-3">
-                                <h4 class="card-title card-intro-title">Radno vrijeme:</h4>
+                                <h4 class="card-title card-intro-title">Radno vrijeme i kapacitet:</h4>
                             </div>
                             <div class="mb-3 row">
                                 <label class="col-sm-4 col-md-3 col-form-label">Radni dani</label>
@@ -112,6 +112,18 @@
                                             <label class="form-check-label">{{ day.vars.label }}</label>
                                         </div>
                                     {% endfor %}
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Kapacitet</label>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    {{ form_row(form.capacity, {'attr': {'class': 'form-control', 'placeholder': 'Unesite kapacitet'}, 'label': false  }) }}
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Max persons for group</label>
+                                <div class="col-sm-6 col-md-6 col-lg-4">
+                                    {{ form_row(form.maxGroupPersons, {'attr': {'class': 'form-control', 'placeholder': 'Unesite broj'}, 'label': false  }) }}
                                 </div>
                             </div>
 

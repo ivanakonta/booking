@@ -21,6 +21,7 @@ class RestaurantFormType extends AbstractType
             ->add('slug')
             ->add('adresa')
             ->add('email')
+            ->add('capacity')
             ->add('logo', FileType::class, [
                 'required' => false,
                 'mapped' => false,
@@ -37,6 +38,7 @@ class RestaurantFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('maxGroupPersons')
             ->add('mobitel')
             ->add('isActive')
             ->add('created_at', null, [

@@ -83,6 +83,18 @@
                                     {{ form_row(form.mobitel, {'attr': {'class': 'form-control', 'placeholder': '+38591234567'}, 'label': false  }) }}
                                 </div>
                             </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Capacity</label>
+                                <div class="col-4 col-sm-3 col-md-2">
+                                    {{ form_row(form.capacity, {'attr': {'class': 'form-control'}, 'label': false  }) }}
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-4 col-md-3 col-form-label">Max persons per group</label>
+                                <div class="col-4 col-sm-3 col-md-2">
+                                    {{ form_row(form.maxGroupPersons, {'attr': {'class': 'form-control'}, 'label': false  }) }}
+                                </div>
+                            </div>
 
                         </div>
                         <div class="card-footer d-sm-flex justify-content-between align-items-center">

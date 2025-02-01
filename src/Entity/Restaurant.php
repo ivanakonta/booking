@@ -66,6 +66,18 @@ class Restaurant
     #[ORM\OneToMany(targetEntity: WorkingDays::class, mappedBy: 'restaurant')]
     private Collection $workingDays;
 
+    #[ORM\Column]
+    private ?int $Capacity = null;
+
+    #[ORM\Column]
+    private ?int $Max_group_persons = null;
+
+    /**
+     * @var Collection<int, TimeSlot>
+     */
+    #[ORM\OneToMany(targetEntity: TimeSlot::class, mappedBy: 'restaurant')]
+    private Collection $timeSlot;
+
     public function __construct()
     {
         $this->korisniks = new ArrayCollection();
@@ -73,6 +85,7 @@ class Restaurant
         $this->modified_at = new \DateTimeImmutable();
         $this->nonWorkingDays = new ArrayCollection();
         $this->workingDays = new ArrayCollection();
+        $this->timeSlot = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -295,6 +308,60 @@ class Restaurant
             // set the owning side to null (unless already changed)
             if ($workingDay->getRestaurant() === $this) {
                 $workingDay->setRestaurant(restaurant: null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCapacity(): ?int
+    {
+        return $this->Capacity;
+    }
+
+    public function setCapacity(int $Capacity): static
+    {
+        $this->Capacity = $Capacity;
+
+        return $this;
+    }
+
+    public function getMaxGroupPersons(): ?int
+    {
+        return $this->Max_group_persons;
+    }
+
+    public function setMaxGroupPersons(int $Max_group_persons): static
+    {
+        $this->Max_group_persons = $Max_group_persons;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TimeSlot>
+     */
+    public function getTimeSlot(): Collection
+    {
+        return $this->timeSlot;
+    }
+
+    public function addTimeSlot(TimeSlot $timeSlot): static
+    {
+        if (!$this->timeSlot->contains($timeSlot)) {
+            $this->timeSlot->add($timeSlot);
+            $timeSlot->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTimeSlot(TimeSlot $timeSlot): static
+    {
+        if ($this->timeSlot->removeElement($timeSlot)) {
+            // set the owning side to null (unless already changed)
+            if ($timeSlot->getRestaurant() === $this) {
+                $timeSlot->setRestaurant(null);
             }
         }
 
