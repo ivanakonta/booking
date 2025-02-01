@@ -84,6 +84,12 @@ class Restaurant
     #[ORM\ManyToMany(targetEntity: Guest::class, mappedBy: 'restaurant')]
     private Collection $guests;
 
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'restaurant')]
+    private Collection $reservations;
+
     public function __construct()
     {
         $this->korisniks = new ArrayCollection();
@@ -93,6 +99,7 @@ class Restaurant
         $this->workingDays = new ArrayCollection();
         $this->timeSlot = new ArrayCollection();
         $this->guests = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -397,6 +404,36 @@ class Restaurant
     {
         if ($this->guests->removeElement($guest)) {
             $guest->removeRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setRestaurant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getRestaurant() === $this) {
+                $reservation->setRestaurant(null);
+            }
         }
 
         return $this;

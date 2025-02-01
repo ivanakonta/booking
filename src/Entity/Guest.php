@@ -30,9 +30,16 @@ class Guest
     #[ORM\ManyToMany(targetEntity: Restaurant::class, inversedBy: 'guests')]
     private Collection $restaurant;
 
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'guest')]
+    private Collection $reservations;
+
     public function __construct()
     {
         $this->restaurant = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -96,6 +103,36 @@ class Guest
     public function removeRestaurant(Restaurant $restaurant): static
     {
         $this->restaurant->removeElement($restaurant);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setGuest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getGuest() === $this) {
+                $reservation->setGuest(null);
+            }
+        }
 
         return $this;
     }
