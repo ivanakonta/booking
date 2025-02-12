@@ -35,13 +35,24 @@
                             </a>
                         </li>
                     </ul>
+
                 </li>
                 <li>
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                         <i class="flaticon-business-report"></i>
-                        <span class="nav-text">{{ 'Unos podataka'|trans }}</span>
+                        <span class="nav-text">{{ 'Rezervacije'|trans }}</span>
                     </a>
                     <ul aria-expanded="false" class="mm-collapse">
+                        <li>
+                            <a href="{{ path('list_reservations', { 'id': restaurant.id })}}">
+                                {{ 'Lista rezervacije'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('list_guests', { 'id': restaurant.id })}}">
+                                {{ 'Lista gostiju'|trans }}
+                            </a>
+                        </li>
                         {# <li>
                             <a href="{{ path('list_dldo', { 'id': pilana.id }) }}">
                                 {{ 'Dovoz oblovine'|trans }}
