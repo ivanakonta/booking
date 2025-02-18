@@ -99,6 +99,17 @@ class RestaurantController extends AbstractController
         ]);
     }
 
+    #[Route('/restaurants/', name: 'restaurants_list')]
+    public function listRestaurants(): Response
+    {
+        $restaurants = $this->restaurantService->getAllRestaurants();
+
+        return $this->render('restaurant/restaurants.html.twig', [
+            'restaurants' => $restaurants,
+            'pageTitle' => 'Lista restorana',
+        ]);
+    }
+
     #[Route('/restaurant/{id}/edit', name: 'edit_restaurant')]
     public function edit(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {

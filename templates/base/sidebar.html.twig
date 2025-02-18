@@ -4,8 +4,8 @@
             {% set isAdmin = is_granted('ROLE_ADMIN') %}
             {% set isManager = is_granted('ROLE_MANAGER') %}
             {% set isUser = is_granted('ROLE_USER') %}
-            {% if isAdmin %}
 
+            {% if isAdmin %}
             {# General Links #}
             <li>
                 <a href="{{ path('restaurant') }}">
@@ -113,6 +113,23 @@
                         <li>
                             <a href="{{ path('show_restaurant', { 'id': restaurant.id })}}">
                                 {{ 'Informacije'|trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% endif %}
+
+            {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                {# Gost sekcija #}
+                <li>
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="flaticon-ticket-window"></i>
+                        <span class="nav-text">{{ 'Restorani'|trans }}</span>
+                    </a>
+                    <ul aria-expanded="false" class="mm-collapse">
+                        <li>
+                            <a href="{{ path('restaurants_list')}}">
+                                {{ 'Lista restorana'|trans }}
                             </a>
                         </li>
                     </ul>

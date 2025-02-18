@@ -82,7 +82,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // Fallback to a default route, adjust as needed
-        return new RedirectResponse($this->urlGenerator->generate('app_login'));
+        return new RedirectResponse($this->urlGenerator->generate('restaurants_list'));
     }
 
     protected function getLoginUrl(Request $request): string

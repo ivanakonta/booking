@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="form-head d-flex mb-3 mb-md-5 align-items-start flex-wrap">
+                <div class="me-auto">
+                    <h3 class="font-w600 mb-0 fs-22 mb-2">
+                        <span class="text-black">Kreiranje rezervacije</span>
+                    </h3>
+                </div>
+            </div>
+
+            {{ form_start(form) }}
+                <div class="basic-form">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Kreiraj svoju rezervaciju</h4>
+                        </div>
+                        <div class="card-body">
+                            <label class="mb-1"><strong>Datum</strong></label>
+                            {{ form_widget(form.date, {'attr': {'class': 'form-control', 'placeholder': 'Datum rezervacije'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Vrijeme</strong></label>
+                            {{ form_widget(form.time, {'attr': {'class': 'form-control', 'placeholder': 'Vrijeme rezervacije'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Broj osoba</strong></label>
+                            {{ form_widget(form.numberOfPersons, {'attr': {'class': 'form-control', 'placeholder': 'Broj osoba'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Ime gosta</strong></label>
+                            {{ form_widget(form.guest.name, {'attr': {'class': 'form-control', 'placeholder': 'Ime gosta'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Email gosta</strong></label>
+                            {{ form_widget(form.guest.email, {'attr': {'class': 'form-control', 'placeholder': 'Email gosta'}}) }}
+                            <br>
+                            <label class="mb-1"><strong>Broj mobitela</strong></label>
+                            {{ form_widget(form.guest.phoneNumber, {'attr': {'class': 'form-control', 'placeholder': 'Broj mobitela'}}) }}
+                            <br>
+                        </div>
+                        <div class="card-footer d-sm-flex justify-content-between align-items-center">
+                            <div class="card-footer-link mb-4 mb-sm-0"></div>
+                            <button id="submit-button" type="submit" class="btn btn-primary">Dodaj</button>
+                        </div>
+                        <div class="hidden">
+                            {{ form_rest(form) }}   
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

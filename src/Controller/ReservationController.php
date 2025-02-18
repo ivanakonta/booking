@@ -127,6 +127,63 @@ class ReservationController extends AbstractController
             'timeSlots' => $timeSlots,
         ]);
     }
+
+    #[Route('/restaurant/{id}/reservation/book', name: 'new_reservation_guest')]
+    public function newReservationGuest(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {    
+        $restaurant = $entityManager->getRepository(Restaurant::class)->find($id);
+        if (!$restaurant) {
+            throw $this->createNotFoundException('Restaurant not found');
+        }
+    
+        // Fetch available time slots for the restaurant
+        $timeSlots = $entityManager->getRepository(TimeSlot::class)->findBy(['restaurant' => $restaurant]);
+    
+        // Create a new Reservation instance
+        $reservation = new Reservation();
+        $form = $this->createForm(ReservationFormType::class, $reservation, ['restaurant' => $restaurant]);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Access the data from the form
+            $reservationFormData = $form->getData();
+            
+            // Extract individual data
+            $guestEmail = $reservationFormData->getGuest()->getEmail();
+            $guestName = $reservationFormData->getGuest()->getName();
+            $guestPhoneNumber = $reservationFormData->getGuest()->getPhoneNumber();
+            $date = $reservationFormData->getDate(); // Ensure this is a DateTimeImmutable object
+            $time = $reservationFormData->getTime();
+            $numberOfPersons = $reservationFormData->getNumberOfPersons();
+    
+            // Call the service to create or update the reservation
+            $this->reservationService->createOrUpdateReservation(
+                $restaurant, 
+                $guestEmail, 
+                $guestName, 
+                $guestPhoneNumber, 
+                $date, 
+                $time, 
+                $numberOfPersons
+            );
+    
+            // Add a success flash message
+            $this->addFlash('success', [
+                'title' => 'Reservation Created',
+                'message' => 'Your reservation has been successfully created.'
+            ]);
+    
+            // Redirect to the list of reservations
+            return $this->redirectToRoute('restaurants_list', ['id' => $id]);
+        }
+    
+        return $this->render('reservation/new_guest.html.twig', [
+            'restaurant' => $restaurant,
+            'form' => $form->createView(),
+            'timeSlots' => $timeSlots,
+            'pageTitle' => sprintf('Kreiranje rezervacije za %s', $restaurant->getName()),
+        ]);
+    }
     
 
     #[Route('/restaurant/{id}/reservation/{reservationId}/edit', name: 'edit_reservation')]

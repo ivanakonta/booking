@@ -1,0 +1,95 @@
+{% extends "./base.html.twig" %}
+
+{% block body %}
+    <!-- row -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12 col-xxl-12">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header border-0 pb-0 flex-wrap d-lg-flex d-block">
+                                <div class="mb-3 me-3">
+                                    <h4 class="card-title mb-2">Restorani</h4>
+                                </div>
+                            </div>
+                            {# <div class="card-body tab-content p-0">
+                                <div class="tab-pane fade active show" id="all-categories">
+                                    {% for restaurant in restaurants %}
+                                        <a href="{{ path('show_restaurant', {'id': restaurant.id}) }}" class="text-decoration-none">
+                                            <div class="sp15 row border-bottom favorites-items p-3 align-items-center p-sm-4">
+                                                <div class="col-xl-5 col-lg-5 col-sm-6 col-12 mb-3 mb-lg-0">
+                                                    <div class="media align-items-center">
+                                                        <img class="rounded me-3"
+                                                            src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/card/pic4.jpg') }}"
+                                                            alt=""
+                                                            width="105"
+                                                            style="background-color: #f3f3f3;"
+                                                        >
+                                                        <div class="media-body">
+                                                            <h5 class="mb-2 text-black">{{ restaurant.name }}</h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-2 col-lg-2 col-sm-6 col-4 text-end">
+                                                    <div class="d-inline-block relative">
+                                                        <button type="button"
+                                                            class="btn btn-primary"
+                                                            onclick="location.href='{{ path('edit_restaurant', {'id': restaurant.id}) }}'"
+                                                        >
+                                                            Edit
+                                                            <span class="btn-icon-end"><i class="flaticon-configuration"></i></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div> #}
+                            {% for restaurant in restaurants %}
+                                <div class="col-xl-12">
+                                    <div class = "card">          
+		                                <div class="card-body rounded" style="background:#3f4953;">
+	                                		<div class="row mx-0 align-items-center">
+	                                			<div class="media align-items-center col-md-12 col-xl-6 col-lg-4 px-0 mb-3 mb-md-0">
+	                                				<img 
+                                                        class="me-3 img-fluid rounded-circle" 
+                                                        width="100" 
+                                                        src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/card/pic4.jpg') }}" 
+                                                        alt="RestaurantIMG">
+	                                				<div class="media-body">
+	                                					<h3 class="mb-1 text-white  fs-22">{{ restaurant.name }}</h3>
+	                                					<p class="text-white mb-1 wspace-no">{{ restaurant.adresa }}</p>
+	                                					<small class="text-white mb-1 wspace-no">{{ restaurant.email }}</small>
+                                                        <br>
+	                                					<small class="text-white mb-1 wspace-no">Kapacitet: {{ restaurant.capacity }}</small>
+                                                        <br>
+	                                					<small class="text-white mb-1 wspace-no">Max. grupa gostiju: {{ restaurant.maxGroupPersons }}</small>
+	                                				</div>
+	                                			</div>
+	                                			<div class="text-start text-lg-right col-xl-6 col-lg-8 p-0 mt-lg-0 mt-3">
+	                                				<div class="iconbox">
+	                                					<i class="las la-phone"></i>
+	                                					<small>Broj mobitela</small>
+	                                					<p>{{restaurant.mobitel}}</p>
+	                                				</div>
+                                                    <a href="{{ path('new_reservation_guest', {id: restaurant.id}) }}" class="iconbox" style="text-decoration: none; color: inherit;">
+                                                        <i class="flaticon-add"></i>
+                                                        <small>Rezerviraj</small>
+                                                        <p>Lagano i brzo</p>
+                                                    </a>
+	                                			</div>
+	                                		</div>
+		                                </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

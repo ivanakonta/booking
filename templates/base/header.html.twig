@@ -42,15 +42,17 @@
                                     {% elseif is_granted('ROLE_USER')   %}
                                         <small>Pozdrav Korisnik </small>
                                     {% else %}
-                                        <small>How did you get here?</small>
+                                        <small>Imate korisnički račun?</small>
                                     {% endif %}
 
-                                    <span>{{ app.user ? app.user.firstName : 'Please Log In' }}</span>
+                                    <span>{{ app.user ? app.user.firstName : 'Prijavite se' }}</span>
                                 </div>
-                                    <img src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/renting-logo.png') }}"
-                                        width="20"
-                                        alt="Default Image"
-                                    >
+                                <img src="{% if is_granted('IS_AUTHENTICATED_FULLY') and restaurant.logo is defined and restaurant.logo is not empty %}
+                                             {{ asset(image_dir ~ restaurant.logo) }}
+                                          {% else %}
+                                             {{ asset('images/renting-logo.png') }}
+                                          {% endif %}"
+                                     alt="Logo">
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end">

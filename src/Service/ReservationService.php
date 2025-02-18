@@ -59,7 +59,8 @@ class ReservationService
             ->setGuest($guest)
             ->setDate($date)
             ->setTime($time)
-            ->setNumberOfPersons($numberOfPersons);
+            ->setNumberOfPersons($numberOfPersons)
+            ->setStatus('SCHEDULED');
 
         // Persist the reservation
         $this->entityManager->persist($reservation);

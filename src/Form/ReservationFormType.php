@@ -6,6 +6,7 @@ use App\Entity\Guest;
 use App\Entity\Reservation;
 use App\Entity\Restaurant;
 use App\Entity\TimeSlot;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -34,9 +35,15 @@ class ReservationFormType extends AbstractType
                 'class' => TimeSlot::class,
                 'choice_label' => 'time',
                 'placeholder' => 'Select time option',
-                'required' => true
+                'required' => true,
+                'query_builder' => function (EntityRepository $er) use ($restaurant) {
+                    // Filter by selected restaurant
+                    return $er->createQueryBuilder('v')
+                        ->where('v.restaurant = :restaurant')
+                        ->setParameter('restaurant', $restaurant);
+                },
             ])
-        ;
+        ; 
     }
 
     public function configureOptions(OptionsResolver $resolver): void

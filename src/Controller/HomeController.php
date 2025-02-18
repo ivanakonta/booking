@@ -29,7 +29,7 @@ class HomeController extends AbstractController
 
         if (!$currentUser instanceof Korisnik) {
             // Handle case where current user is not an instance of Korisnik
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('restaurants_list');
         }
 
         try {
@@ -49,11 +49,11 @@ class HomeController extends AbstractController
                 } else {
                     // Handle case where restaurant is not set or found
                     $this->addFlash('error', 'No restaurant found for the user.');
-                    return $this->redirectToRoute('app_login');
+                    return $this->redirectToRoute('restaurants_list');
                 }
             } else {
                 // If neither admin nor manager/user, redirect to login page
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('restaurants_list');
             }
         }
     }
