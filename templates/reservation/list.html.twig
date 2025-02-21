@@ -49,6 +49,7 @@
                             <th><strong class="font-w600">Datum</strong></th>
                             <th><strong class="font-w600">Vrijeme </strong></th>
                             <th><strong class="font-w600">Broj osoba</strong></th>
+                            <th><strong class="font-w600">Status</strong></th>
                             <th><strong class="font-w600">Ime gosta</strong></th>
                             <th><strong class="font-w600">Email gosta</strong></th>
                             <th><strong class="font-w600">Broj mobitela</strong></th>
@@ -61,6 +62,7 @@
                                 <td>{{ reservation.date|date('d.m.Y') }}</td> <!-- Adjust based on actual fields -->
                                 <td>{{ reservation.time.time }}h</td> <!-- Assuming username is a field in Korisnik -->
                                 <td>{{ reservation.numberOfPersons }}</td> <!-- Assuming username is a field in Korisnik -->
+                                <td>{{ reservation.status }}</td> <!-- Assuming username is a field in Korisnik -->
                                 <td>{{ reservation.guest.name }}</td> <!-- Assuming username is a field in Korisnik -->
                                 <td>{{ reservation.guest.email }}</td> <!-- Assuming username is a field in Korisnik -->
                                 <td>{{ reservation.guest.phoneNumber }}</td> <!-- Assuming username is a field in Korisnik -->
@@ -89,6 +91,22 @@
                                                     <path d="M12 8H12.01" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                                 </svg>
                                                 Izbriši rezervaciju
+                                            </a>
+                                            <a class="dropdown-item text-black" href="{{ path('finish_reservation', {'id': restaurant.id, 'reservationId': reservation.id}) }}">
+                                                <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M12 16V12" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M12 8H12.01" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                Završi rezervaciju
+                                            </a>
+                                            <a class="dropdown-item text-black" href="{{ path('cancel_reservation', {'id': restaurant.id, 'reservationId': reservation.id}) }}">
+                                                <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M12 16V12" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M12 8H12.01" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                Otkaži rezervaciju
                                             </a>
                                         </div>
                                     </div>

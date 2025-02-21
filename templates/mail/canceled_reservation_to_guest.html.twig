@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ pageTitle }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .restaurant-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 5px;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .content .details {
+            margin-top: 15px;
+            font-size: 16px;
+        }
+        .details .label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ restaurant.name }} Reservation Canceled</h1>
+        </div>
+
+        <div class="content">
+            <p>Dear {{ guest.name }},</p>
+            <p>We are canceling your reservation at <strong>{{ restaurant.name }}</strong>.</p>
+
+            <div class="details">
+                <p><span class="label">Reservation Date:</span> {{ reservationDate }}</p>
+                <p><span class="label">Reservation Time:</span> {{ reservationTime }}</p>
+                <p><span class="label">Number of Persons:</span> {{ reseervationNumberOfPersons }}</p>
+            </div>
+
+            <p>If you have any questions, feel free to contact us or visit our website for more information.</p>
+            <p>We look forward to welcoming you!</p>
+
+            <p>Best regards,</p>
+            <p><strong>{{ restaurant.name }}</strong></p>
+
+            <div class="footer">
+                <p>For any inquiries, please contact us at <a href="mailto:{{ restaurant.email }}">{{ restaurant.email }}</a></p>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>

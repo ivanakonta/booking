@@ -16,7 +16,10 @@ class ReservationService
     private GuestRepository $guestRepository;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(GuestRepository $guestRepository, EntityManagerInterface $entityManager)
+    public function __construct(
+        GuestRepository $guestRepository, 
+        EntityManagerInterface $entityManager, 
+        )
     {
         $this->guestRepository = $guestRepository;
         $this->entityManager = $entityManager;
@@ -140,6 +143,30 @@ class ReservationService
 
         $this->entityManager->remove($reservation);
         $this->entityManager->flush();
+    }
+
+    public function cancelReservation(Reservation $reservation): void
+    {
+        $reservation->setStatus('CANCELED');
+        $this->entityManager->persist($reservation);
+        $this->entityManager->flush();
+
+    }
+
+    public function finishedReservation(Reservation $reservation): void
+    {
+        $reservation->setStatus('FINISHED');
+        $this->entityManager->persist($reservation);
+        $this->entityManager->flush();
+
+    }
+
+    public function guestCancelReservation(Reservation $reservation): void
+    {
+        $reservation->setStatus('FINISHED');
+        $this->entityManager->persist($reservation);
+        $this->entityManager->flush();
+
     }
 
     public function getAllGuestsForRestaurant(Restaurant $restaurant): array

@@ -9,6 +9,7 @@ use App\Entity\Reservation;
 use App\Form\ReservationFormType;
 use App\Repository\ReservationRepository;
 use App\Service\AccessCheckerService;
+use App\Service\MailService;
 use App\Service\ReservationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,11 +22,13 @@ class ReservationController extends AbstractController
 {
     private ReservationService $reservationService;
     private AccessCheckerService $accessCheckerService;
+    private MailService $mailService;
 
-    public function __construct(ReservationService $reservationService, AccessCheckerService $accessCheckerService)
+    public function __construct(ReservationService $reservationService, AccessCheckerService $accessCheckerService, MailService $mailService)
     {
         $this->reservationService = $reservationService;
         $this->accessCheckerService = $accessCheckerService;
+        $this->mailService = $mailService;
     }
 
     #[Route('/restaurant/{id}/reservations', name: 'list_reservations')]
@@ -117,6 +120,9 @@ class ReservationController extends AbstractController
                 'message' => 'Your reservation has been successfully created.'
             ]);
     
+            
+            $this->mailService->sendConfirmedReservationEmailToGuest($reservation);
+
             // Redirect to the list of reservations
             return $this->redirectToRoute('list_reservations', ['id' => $id]);
         }
@@ -172,6 +178,10 @@ class ReservationController extends AbstractController
                 'title' => 'Reservation Created',
                 'message' => 'Your reservation has been successfully created.'
             ]);
+
+            
+            $this->mailService->sendConfirmedReservationEmailToRestaurant($reservation);
+            $this->mailService->sendConfirmedReservationEmailToGuest($reservation);
     
             // Redirect to the list of reservations
             return $this->redirectToRoute('restaurants_list', ['id' => $id]);
@@ -247,6 +257,9 @@ class ReservationController extends AbstractController
             // Add a success flash message
             $this->addFlash('success', 'Reservation updated successfully!');
     
+            
+        $this->mailService->sendEditedReservationEmailToGuest($reservation);
+
             // Redirect to the list of reservations
             return $this->redirectToRoute('list_reservations', ['id' => $id]);
         }
@@ -278,9 +291,115 @@ class ReservationController extends AbstractController
 
         $this->reservationService->deleteReservation($reservationId);
 
-        $this->addFlash('success', 'Reservation deleted successfully!');
+        $this->addFlash('success', [
+            'title' => 'Reservation deleted successfully!',
+            'message' => 'Reservation has been deleted successfully!',
+        ]);    
+        return $this->redirectToRoute('list_reservations', ['id' => $id]);
+    }
+
+    #[Route('/restaurant/{id}/reservation/{reservationId}/cancel', name: 'cancel_reservation')]
+    public function cancelReservation(
+        int $id, 
+        int $reservationId,
+        EntityManagerInterface $entityManager,
+        ReservationService $reservationService
+        ) 
+    {
+        $restaurant = $entityManager->getRepository(Restaurant::class)->find($id);
+        if (!$restaurant) {
+            throw $this->createNotFoundException('Restaurant not found');
+        }
+
+        $reservation = $entityManager->getRepository(Reservation::class)->find($reservationId);
+
+        if(!$reservation) {
+            throw $this->createNotFoundException('Rezervacija nije pronađena.');
+        }
+
+        $reservationService->cancelReservation($reservation);
+
+        $this->addFlash('success', [
+            'title' => 'Reservation canceled successfully!',
+            'message' => 'Reservation has been canceled successfully!',
+        ]);        
+        $this->mailService->sendCanceledReservationEmailToGuest($reservation);
 
         return $this->redirectToRoute('list_reservations', ['id' => $id]);
+    }
+
+    #[Route('/restaurant/{id}/reservation/{reservationId}/finish', name: 'finish_reservation')]
+    public function finishReservation(
+        int $id, 
+        int $reservationId,
+        EntityManagerInterface $entityManager,
+        ReservationService $reservationService
+        ) 
+    {
+        $restaurant = $entityManager->getRepository(Restaurant::class)->find($id);
+        if (!$restaurant) {
+            throw $this->createNotFoundException('Restaurant not found');
+        }
+
+        $reservation = $entityManager->getRepository(Reservation::class)->find($reservationId);
+
+        if(!$reservation) {
+            throw $this->createNotFoundException('Rezervacija nije pronađena.');
+        }
+
+        $reservationService->finishedReservation($reservation);
+
+        $this->addFlash('success', [
+            'title' => 'Reservation finished successfully!',
+            'message' => 'Reservation finished successfully!',
+        ]);
+        
+        $this->mailService->sendFinishedReservationEmailToGuest($reservation);
+
+        return $this->redirectToRoute('list_reservations', ['id' => $id]);
+    }
+
+    #[Route('/restaurant/{id}/reservation/{reservationId}/guest-cancel/{token}', name: 'guest_cancel_reservation')]
+    public function guestCancelReservation(
+        int $id, 
+        int $reservationId,
+        string $token,
+        EntityManagerInterface $entityManager,
+        ReservationService $reservationService
+        ) 
+    {
+        
+        $restaurant = $entityManager->getRepository(Restaurant::class)->find($id);
+        if (!$restaurant) {
+            throw $this->createNotFoundException('Restaurant not found');
+        }
+
+        $tokenFromIdAndEmail = hash('sha256', sprintf('%s%s', $id, $restaurant->getEmail()));
+
+        if ($token !== $tokenFromIdAndEmail) {
+            $this->addFlash('error', [
+                'title' => 'Unauthorized access',
+                'message' => 'Invalid token or reservation ID.',
+            ]);
+
+            throw $this->createNotFoundException('Unauthorized access!');
+        }
+
+        $reservation = $entityManager->getRepository(Reservation::class)->find($reservationId);
+
+        if(!$reservation) {
+            throw $this->createNotFoundException('Rezervacija nije pronađena.');
+        }
+
+        $reservationService->guestCancelReservation($reservation);
+
+        $this->addFlash('success', 'Reservation canceled successfully!'); 
+
+        
+        $this->mailService->sendCanceledReservationEmailToRestaurant($reservation);
+        $this->mailService->sendCanceledReservationEmailToGuest($reservation);
+
+        return $this->redirectToRoute('restaurants_list');
     }
 
     #[Route('/restaurant/{id}/guests', name: 'list_guests')]
