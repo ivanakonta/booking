@@ -23,6 +23,30 @@
 			<path d="M20.3901 11.724L14.6661 17.448L11.6088 14.3907C11.4858 14.2633 11.3387 14.1617 11.176 14.0919C11.0133 14.022 10.8384 13.9852 10.6613 13.9837C10.4843 13.9821 10.3087 14.0159 10.1449 14.0829C9.98099 14.1499 9.83212 14.2489 9.70693 14.3741C9.58174 14.4993 9.48274 14.6482 9.41569 14.8121C9.34865 14.9759 9.31492 15.1515 9.31646 15.3285C9.318 15.5056 9.35478 15.6805 9.42466 15.8432C9.49453 16.0059 9.59611 16.153 9.72346 16.276L13.7235 20.276C13.9735 20.5259 14.3126 20.6664 14.6661 20.6664C15.0197 20.6664 15.3587 20.5259 15.6088 20.276L22.2754 13.6093C22.5183 13.3579 22.6527 13.0211 22.6497 12.6715C22.6466 12.3219 22.5064 11.9875 22.2592 11.7402C22.012 11.493 21.6776 11.3528 21.328 11.3498C20.9784 11.3467 20.6416 11.4811 20.3901 11.724Z" fill="white"></path>
 		</svg>
 		Dodaj rezervaciju</a>
+        <div class="dropdown ms-3 d-inline-block">
+            <div class="btn btn-outline-primary btn-rounded dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                <svg class="me-3 scale5" width="14" height="14" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0)">
+                    <path d="M22.4276 2.856H21.8676V1.428C21.8676 0.56 21.2796 0 20.4396 0C19.5996 0 19.0116 0.56 19.0116 1.428V2.856H9.71557V1.428C9.71557 0.56 9.15557 0 8.28757 0C7.41957 0 6.85957 0.56 6.85957 1.428V2.856H5.57157C2.85557 2.856 0.55957 5.152 0.55957 7.868V23.016C0.55957 25.732 2.85557 28.028 5.57157 28.028H22.4276C25.1436 28.028 27.4396 25.732 27.4396 23.016V7.868C27.4396 5.152 25.1436 2.856 22.4276 2.856ZM5.57157 5.712H22.4276C23.5756 5.712 24.5836 6.72 24.5836 7.868V9.856H3.41557V7.868C3.41557 6.72 4.42357 5.712 5.57157 5.712ZM22.4276 25.144H5.57157C4.42357 25.144 3.41557 24.136 3.41557 22.988V12.712H24.5556V22.988C24.5836 24.136 23.5756 25.144 22.4276 25.144Z" fill="#6b70f1"></path>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0">
+                    <rect width="28" height="28" fill="white"></rect>
+                    </clipPath>
+                    </defs>
+                </svg>
+                Filter
+            </div>
+            <div class="dropdown-menu dropdown-menu-left">
+                <a class="dropdown-item" href="{{ path('list_reservations', { 'id': restaurant.id, 'filter': 'SCHEDULED' }) }}">SCHEDULED</a>
+                <a class="dropdown-item" href="{{ path('list_reservations', { 'id': restaurant.id, 'filter': 'FINISHED' }) }}">FINISHED</a>
+                <a class="dropdown-item" href="{{ path('list_reservations', { 'id': restaurant.id, 'filter': 'CANCELED' }) }}">CANCELED</a>
+                <a class="dropdown-item" href="{{ path('list_reservations', { 'id': restaurant.id, 'filter': 'today' }) }}">Today</a>
+                <a class="dropdown-item" href="{{ path('list_reservations', { 'id': restaurant.id, 'filter': 'this_week' }) }}">This Week</a>
+                <a class="dropdown-item" href="{{ path('list_reservations', { 'id': restaurant.id, 'filter': 'this_month' }) }}">This Month</a>
+                <a class="dropdown-item" href="{{ path('list_reservations', { 'id': restaurant.id, 'filter': 'All' }) }}">All</a>
+            </div>
+        </div>
 	</div>
     <div class="form-head d-flex mb-4 align-items-start">
         <!-- Filter Form -->
@@ -40,6 +64,8 @@
             <button class="btn btn-primary" type="submit">Filter</button>
         </form>
     </div>
+    
+    
     <div class="row">
         <div class="col-xl-12">
             <div class="table-responsive">
@@ -62,7 +88,14 @@
                                 <td>{{ reservation.date|date('d.m.Y') }}</td> <!-- Adjust based on actual fields -->
                                 <td>{{ reservation.time.time }}h</td> <!-- Assuming username is a field in Korisnik -->
                                 <td>{{ reservation.numberOfPersons }}</td> <!-- Assuming username is a field in Korisnik -->
-                                <td>{{ reservation.status }}</td> <!-- Assuming username is a field in Korisnik -->
+                                <td style="
+                                    color: {% if reservation.status == 'SCHEDULED' %}green
+                                           {% elseif reservation.status == 'FINISHED' %}blue
+                                           {% elseif reservation.status == 'CANCELED' %}red
+                                           {% else %}black{% endif %};
+                                ">
+                                    {{ reservation.status }}
+                                </td>                                
                                 <td>{{ reservation.guest.name }}</td> <!-- Assuming username is a field in Korisnik -->
                                 <td>{{ reservation.guest.email }}</td> <!-- Assuming username is a field in Korisnik -->
                                 <td>{{ reservation.guest.phoneNumber }}</td> <!-- Assuming username is a field in Korisnik -->
@@ -92,14 +125,6 @@
                                                 </svg>
                                                 Izbriši rezervaciju
                                             </a>
-                                            <a class="dropdown-item text-black" href="{{ path('finish_reservation', {'id': restaurant.id, 'reservationId': reservation.id}) }}">
-                                                <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                                    <path d="M12 16V12" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                                    <path d="M12 8H12.01" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                                </svg>
-                                                Završi rezervaciju
-                                            </a>
                                             <a class="dropdown-item text-black" href="{{ path('cancel_reservation', {'id': restaurant.id, 'reservationId': reservation.id}) }}">
                                                 <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -107,6 +132,14 @@
                                                     <path d="M12 8H12.01" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                                                 </svg>
                                                 Otkaži rezervaciju
+                                            </a>
+                                            <a class="dropdown-item text-black" href="{{ path('finish_reservation', {'id': restaurant.id, 'reservationId': reservation.id}) }}">
+                                                <svg class="me-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M12 16V12" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <path d="M12 8H12.01" stroke="#6F6F6F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                                Završi rezervaciju
                                             </a>
                                         </div>
                                     </div>

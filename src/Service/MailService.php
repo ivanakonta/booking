@@ -50,14 +50,37 @@ class MailService
      *
      * @param Reservation $reservation The reservation entity.
      */
+    // public function sendConfirmedReservationEmailToGuest(Reservation $reservation): void
+    // {
+    //     $restaurant = $reservation->getRestaurant();
+    //     $guest = $reservation->getGuest();
+    //     $from = sprintf('%s <ivana.konta99@gmail.com>', $restaurant->getName());
+    //     $to = $guest->getEmail();
+    //     $subject = 'Your Reservation is Confirmed';
+    //     $template = 'mail/confirmed_reservation_to_guest.html.twig';
+    //     $context = [
+    //         'pageTitle' => $subject,
+    //         'restaurant' => $restaurant,
+    //         'reservation' => $reservation,
+    //         'guest' => $guest,
+    //         'reservationDate' => $reservation->getDate()->format('F j, Y'),
+    //         'reservationTime' => $reservation->getTime()->getTime(),
+    //         'reseervationNumberOfPersons' => $reservation->getNumberOfPersons(),
+    //         'token' => $this->getToken($reservation, $restaurant),
+    //     ];
+    //     $this->sendTemplatedEmail($from, $to, $subject, $template, $context);
+    // }
     public function sendConfirmedReservationEmailToGuest(Reservation $reservation): void
     {
         $restaurant = $reservation->getRestaurant();
+        $restaurantName = $restaurant->getName();
         $guest = $reservation->getGuest();
-        $from = sprintf('%s <ivana.konta99@gmail.com>', $restaurant->getName());
+
+        $from = $restaurantName . ' <ivana.konta99@gmail.com>';
         $to = $guest->getEmail();
         $subject = 'Your Reservation is Confirmed';
         $template = 'mail/confirmed_reservation_to_guest.html.twig';
+
         $context = [
             'pageTitle' => $subject,
             'restaurant' => $restaurant,
@@ -65,9 +88,10 @@ class MailService
             'guest' => $guest,
             'reservationDate' => $reservation->getDate()->format('F j, Y'),
             'reservationTime' => $reservation->getTime()->getTime(),
-            'reseervationNumberOfPersons' => $reservation->getNumberOfPersons(),
+            'reservationNumberOfPersons' => $reservation->getNumberOfPersons(),
             'token' => $this->getToken($reservation, $restaurant),
         ];
+
         $this->sendTemplatedEmail($from, $to, $subject, $template, $context);
     }
     /**

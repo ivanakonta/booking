@@ -58,6 +58,67 @@ class ReservationRepository extends ServiceEntityRepository
         return $results;
     }
 
+    public function findScheduledByRestaurant(Restaurant $restaurant): array
+    {
+        return $this->createQueryBuilder('v')
+            ->where('v.restaurant = :restaurant')
+            ->andWhere('v.status = :status')
+            ->setParameter('restaurant', $restaurant)
+            ->setParameter('status', 'SCHEDULED') // Postavi vrednost kao string
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findCanceledByRestaurant(Restaurant $restaurant): array
+    {
+        return $this->createQueryBuilder('v')
+            ->where('v.restaurant = :restaurant')
+            ->andWhere('v.status = :status')
+            ->setParameter('restaurant', $restaurant)
+            ->setParameter('status', 'CANCELED')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findFinishedByRestaurant(Restaurant $restaurant): array
+    {
+        return $this->createQueryBuilder('v')
+            ->where('v.restaurant = :restaurant')
+            ->andWhere('v.status = :status')
+            ->setParameter('restaurant', $restaurant)
+            ->setParameter('status', 'FINISHED')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findByPeriod(Restaurant $restaurant, string $period)
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->andWhere('r.restaurant = :restaurant')
+            ->setParameter('restaurant', $restaurant);
+    
+        if ($period === 'today') {
+            $today = new \DateTime('today');
+            $qb->andWhere('r.date BETWEEN :start AND :end')
+               ->setParameter('start', $today->format('Y-m-d 00:00:00'))
+               ->setParameter('end', $today->format('Y-m-d 23:59:59'));
+        } elseif ($period === 'this_week') {
+            $start = new \DateTime('monday this week');
+            $end = new \DateTime('sunday this week');
+            $qb->andWhere('r.date BETWEEN :start AND :end')
+               ->setParameter('start', $start->format('Y-m-d 00:00:00'))
+               ->setParameter('end', $end->format('Y-m-d 23:59:59'));
+        } elseif ($period === 'this_month') {
+            $start = new \DateTime('first day of this month');
+            $end = new \DateTime('last day of this month');
+            $qb->andWhere('r.date BETWEEN :start AND :end')
+               ->setParameter('start', $start->format('Y-m-d 00:00:00'))
+               ->setParameter('end', $end->format('Y-m-d 23:59:59'));
+        }
+    
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Reservation[] Returns an array of Reservation objects
     //     */

@@ -36,35 +36,45 @@ class ReservationController extends AbstractController
         int $id, Request $request, 
         EntityManagerInterface $entityManager, 
         ReservationRepository $reservationRepository
-        ): Response
+    ): Response
     {
         $this->accessCheckerService->checkAdminOrManagerAccess($id);
-        // Fetch the restaurant
+    
         $restaurant = $entityManager->getRepository(Restaurant::class)->find($id);
         if (!$restaurant) {
             throw $this->createNotFoundException('Restaurant not found');
         }
-        // Fetch filter parameters from request
+    
         $timeSlotId = $request->query->get('timeSlot') !== null ? (int)$request->query->get('timeSlot') : null;
         $dateFrom = $request->query->get('dateFrom') ? new \DateTime($request->query->get('dateFrom')) : null;
         $dateTo = $request->query->get('dateTo') ? new \DateTime($request->query->get('dateTo')) : null;
-
-        // Convert IDs to entities if they are not null
+        $filter = $request->query->get('filter', 'All');
+    
         $timeSlot = $timeSlotId ? $entityManager->getRepository(TimeSlot::class)->find($timeSlotId) : null;
-
-        // Fetch filtered results and totals
-        $reservations = $reservationRepository->findAllByFilters(
-            $restaurant,
-            $timeSlot,
-            $dateFrom,
-            $dateTo
-        );
-
+    
+        // Primena filtera prema periodu
+        if ($filter === 'today' || $filter === 'this_week' || $filter === 'this_month') {
+            $reservations = $reservationRepository->findByPeriod($restaurant, $filter);
+        } else {
+            // Ostali filteri (SCHEDULED, CANCELED, FINISHED, itd.)
+            if ($filter === 'SCHEDULED') {
+                $reservations = $reservationRepository->findScheduledByRestaurant($restaurant);
+            } elseif ($filter === 'CANCELED') {
+                $reservations = $reservationRepository->findCanceledByRestaurant($restaurant);
+            } elseif ($filter === 'FINISHED') {
+                $reservations = $reservationRepository->findFinishedByRestaurant($restaurant);
+            } else {
+                $reservations = $reservationRepository->findAllByFilters(
+                    $restaurant,
+                    $timeSlot,
+                    $dateFrom,
+                    $dateTo
+                );
+            }
+        }
+    
         $timeSlots = $entityManager->getRepository(TimeSlot::class)->findBy(['restaurant' => $restaurant]);
-
-        // Fetch the list of reservations for the restaurant
-        // $reservations = $this->reservationService->getAllReservationsByRestaurant($restaurant);
-
+    
         return $this->render('reservation/list.html.twig', [
             'reservations' => $reservations,
             'timeSlots' => $timeSlots,
@@ -72,6 +82,8 @@ class ReservationController extends AbstractController
             'pageTitle' => 'Reservations List',
         ]);
     }
+    
+    
 
     #[Route('/restaurant/{id}/reservation/new', name: 'new_reservation')]
     public function newReservation(int $id, Request $request, EntityManagerInterface $entityManager): Response
@@ -102,9 +114,10 @@ class ReservationController extends AbstractController
             $date = $reservationFormData->getDate(); // Ensure this is a DateTimeImmutable object
             $time = $reservationFormData->getTime();
             $numberOfPersons = $reservationFormData->getNumberOfPersons();
-    
+
             // Call the service to create or update the reservation
             $this->reservationService->createOrUpdateReservation(
+                $reservation,
                 $restaurant, 
                 $guestEmail, 
                 $guestName, 
@@ -113,6 +126,8 @@ class ReservationController extends AbstractController
                 $time, 
                 $numberOfPersons
             );
+            $this->mailService->sendConfirmedReservationEmailToGuest($reservation);
+
     
             // Add a success flash message
             $this->addFlash('success', [
@@ -120,9 +135,6 @@ class ReservationController extends AbstractController
                 'message' => 'Your reservation has been successfully created.'
             ]);
     
-            
-            $this->mailService->sendConfirmedReservationEmailToGuest($reservation);
-
             // Redirect to the list of reservations
             return $this->redirectToRoute('list_reservations', ['id' => $id]);
         }
@@ -164,6 +176,7 @@ class ReservationController extends AbstractController
     
             // Call the service to create or update the reservation
             $this->reservationService->createOrUpdateReservation(
+                $reservation,
                 $restaurant, 
                 $guestEmail, 
                 $guestName, 
@@ -172,16 +185,14 @@ class ReservationController extends AbstractController
                 $time, 
                 $numberOfPersons
             );
-    
+            $this->mailService->sendConfirmedReservationEmailToRestaurant($reservation);
+            $this->mailService->sendConfirmedReservationEmailToGuest($reservation);
+
             // Add a success flash message
             $this->addFlash('success', [
                 'title' => 'Reservation Created',
                 'message' => 'Your reservation has been successfully created.'
             ]);
-
-            
-            $this->mailService->sendConfirmedReservationEmailToRestaurant($reservation);
-            $this->mailService->sendConfirmedReservationEmailToGuest($reservation);
     
             // Redirect to the list of reservations
             return $this->redirectToRoute('restaurants_list', ['id' => $id]);
@@ -255,8 +266,10 @@ class ReservationController extends AbstractController
             );
     
             // Add a success flash message
-            $this->addFlash('success', 'Reservation updated successfully!');
-    
+            $this->addFlash('success', [
+                'title' => 'Reservation updated successfully!',
+                'message' => 'Reservation has been updated successfully!',
+            ]);    
             
         $this->mailService->sendEditedReservationEmailToGuest($reservation);
 
@@ -359,21 +372,20 @@ class ReservationController extends AbstractController
         return $this->redirectToRoute('list_reservations', ['id' => $id]);
     }
 
-    #[Route('/restaurant/{id}/reservation/{reservationId}/guest-cancel/{token}', name: 'guest_cancel_reservation')]
+    #[Route('/{id}/reservation/guest-cancel/{token}', name: 'guest_cancel_reservation')]
     public function guestCancelReservation(
         int $id, 
-        int $reservationId,
         string $token,
         EntityManagerInterface $entityManager,
-        ReservationService $reservationService
+        ReservationService $reservationService,
+        ReservationRepository $reservationRepository
         ) 
     {
-        
-        $restaurant = $entityManager->getRepository(Restaurant::class)->find($id);
-        if (!$restaurant) {
-            throw $this->createNotFoundException('Restaurant not found');
+        $reservation = $entityManager->getRepository(Reservation::class)->find($id);
+        if (!$reservation) {
+            throw $this->createNotFoundException('Reservation not found');
         }
-
+        $restaurant = $reservation->getRestaurant();
         $tokenFromIdAndEmail = hash('sha256', sprintf('%s%s', $id, $restaurant->getEmail()));
 
         if ($token !== $tokenFromIdAndEmail) {
@@ -385,16 +397,12 @@ class ReservationController extends AbstractController
             throw $this->createNotFoundException('Unauthorized access!');
         }
 
-        $reservation = $entityManager->getRepository(Reservation::class)->find($reservationId);
-
-        if(!$reservation) {
-            throw $this->createNotFoundException('Rezervacija nije pronađena.');
-        }
-
         $reservationService->guestCancelReservation($reservation);
 
-        $this->addFlash('success', 'Reservation canceled successfully!'); 
-
+        $this->addFlash('success', [
+            'title' => 'Reservation canceled successfully!',
+            'message' => 'Reservation canceled successfully!',
+        ]);
         
         $this->mailService->sendCanceledReservationEmailToRestaurant($reservation);
         $this->mailService->sendCanceledReservationEmailToGuest($reservation);

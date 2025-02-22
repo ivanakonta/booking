@@ -25,8 +25,8 @@ class ReservationService
         $this->entityManager = $entityManager;
     }
 
-    // Create or update a reservation
     public function createOrUpdateReservation(
+        Reservation $reservation,
         Restaurant $restaurant,
         string $guestEmail, // Email passed as the identifier
         string $guestName,  // Name of the guest
@@ -34,17 +34,17 @@ class ReservationService
         DateTimeImmutable $date,
         TimeSlot $time,
         int $numberOfPersons
-    ): Reservation {
+    ): void {
         // Check if the guest already exists by email
         $guest = $this->guestRepository->findOneByEmail($guestEmail);
-
+    
         if (!$guest) {
             // If the guest doesn't exist, create a new guest
             $guest = new Guest();
             $guest->setEmail($guestEmail)
                 ->setName($guestName)
                 ->setPhoneNumber($guestPhoneNumber);
-
+    
             // Persist new guest in the database
             $this->entityManager->persist($guest);
             $this->entityManager->flush();  // Make sure the guest is saved
@@ -52,26 +52,23 @@ class ReservationService
             // If the guest exists, update their name and phone number
             $guest->setName($guestName)
                 ->setPhoneNumber($guestPhoneNumber);
-
+    
             $this->entityManager->flush();  // Update guest record
         }
-
-        // Create the reservation and associate with the guest
-        $reservation = new Reservation();
+    
+        // Associate the passed reservation object with the guest and other details
         $reservation->setRestaurant($restaurant)
             ->setGuest($guest)
             ->setDate($date)
             ->setTime($time)
             ->setNumberOfPersons($numberOfPersons)
             ->setStatus('SCHEDULED');
-
-        // Persist the reservation
+    
+        // Persist the reservation (no need to create a new instance)
         $this->entityManager->persist($reservation);
         $this->entityManager->flush();
-
-        return $reservation;
     }
-
+    
     // Get all reservations
     public function getAllReservationsByRestaurant(Restaurant $restaurant): array
     {
