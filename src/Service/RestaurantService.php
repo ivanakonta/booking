@@ -31,6 +31,16 @@ class RestaurantService
     }
 
     /**
+     * Retrieves all Active Restaurants entities.
+     *
+     * @return Collection
+     */
+    public function getAllActiveRestaurants(): array
+    {
+        return $this->restaurantRepository->findBy(['isActive' => true]);
+    }
+
+    /**
      * Retrieves a restaurant entity by its ID.
      *
      * @param int $id

@@ -225,6 +225,7 @@ class Restaurant
     {
         return $this->isActive;
     }
+
     public function setIsActive(?bool $isActive): static
     {
         $this->isActive = $isActive;

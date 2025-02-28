@@ -28,6 +28,39 @@
                                     </div>
                                 </div>
                             </div>
+                            <h4 class="text-black mb-3">Rezervacijski linkovi</h4>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body text-center p-3">
+                                            <a href="{{ path('list_reservations', {id: restaurant.id}) }}" class="btn btn-primary btn-block p-2">
+                                                Rezervacije
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body text-center p-3">
+                                            <a href="{{ path('new_reservation', {id: restaurant.id}) }}" class="btn btn-primary btn-block p-2">
+                                                Nova rezervacija
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="text-black mb-3">Gosti</h4>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body text-center p-3">
+                                            <a href="{{ path('list_guests', {id: restaurant.id}) }}" class="btn btn-primary btn-block p-2">
+                                                Gosti
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
                     </div>
                 </div>

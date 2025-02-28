@@ -102,7 +102,7 @@ class RestaurantController extends AbstractController
     #[Route('/restaurants/', name: 'restaurants_list')]
     public function listRestaurants(): Response
     {
-        $restaurants = $this->restaurantService->getAllRestaurants();
+        $restaurants = $this->restaurantService->getAllActiveRestaurants();
 
         return $this->render('restaurant/restaurants.html.twig', [
             'restaurants' => $restaurants,

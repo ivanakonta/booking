@@ -4,9 +4,9 @@
 {% block header %}
     <div class="nav-header" style="background-color:#d8d8d8">
         <a href="/" class="brand-logo">
-            <img class="logo-abbr show-on-small" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/renting-logo.png') }}" alt="">
-            <img class="logo-compact" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/renting-full.png') }}" alt="">
-            <img class="brand-title" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/renting-full.png') }}" alt="">
+            <img class="logo-abbr show-on-small" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/reserve2.png') }}" alt="">
+            <img class="logo-compact" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/reserve2.png') }}" alt="">
+            <img class="brand-title" src="{{ restaurant.logo is defined and restaurant.logo is not empty ? asset(image_dir ~ restaurant.logo) : asset('images/reserve2.png') }}" alt="">
         </a>
 
         <div class="nav-control" >
@@ -50,7 +50,7 @@
                                 <img src="{% if is_granted('IS_AUTHENTICATED_FULLY') and restaurant.logo is defined and restaurant.logo is not empty %}
                                              {{ asset(image_dir ~ restaurant.logo) }}
                                           {% else %}
-                                             {{ asset('images/renting-logo.png') }}
+                                             {{ asset('images/reserve2.png') }}
                                           {% endif %}"
                                      alt="Logo">
                             </a>
